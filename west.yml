@@ -10,6 +10,7 @@ manifest:
     - name: gametoy
       remote: gh
       revision: master
+      path: gametoy
     - name: zephyr
       remote: zephyr
       revision: v3.7.0
