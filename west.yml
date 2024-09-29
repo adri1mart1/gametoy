@@ -2,9 +2,14 @@ manifest:
   remotes:
     - name: zephyr
       url-base: https://github.com/zephyrproject-rtos
+    - name: gh
+      url-base: https://github.com/adri1mart1
   defaults:
     remote: zephyr
   projects:
+    - name: gametoy
+      remote: gh
+      revision: master
     - name: zephyr
       remote: zephyr
       revision: v3.7.0
