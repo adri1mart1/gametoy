@@ -1,16 +1,18 @@
+west:
+  url: https://github.com/zephyrproject-rtos/west
+  version: v0.8.0
+
 manifest:
+  self:
+    path: gametoy
+  defaults:
+    remote: zephyr
   remotes:
     - name: zephyr
       url-base: https://github.com/zephyrproject-rtos
-    - name: gh
-      url-base: https://github.com/adri1mart1
-  defaults:
-    remote: zephyr
+    - name: github
+      url-base: git@github.com:adri1mart1
   projects:
-    - name: gametoy
-      remote: gh
-      revision: master
-      path: gametoy
     - name: zephyr
       remote: zephyr
       revision: v3.7.0
@@ -19,5 +21,4 @@ manifest:
           - segger
           - hal_nordic
           - cmsis
-  self:
-    path: gametoy
+      west-commands: scripts/west-commands.yml
