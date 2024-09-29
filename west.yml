@@ -20,4 +20,4 @@ manifest:
           - hal_nordic
           - cmsis
   self:
-    path: main
+    path: gametoy
