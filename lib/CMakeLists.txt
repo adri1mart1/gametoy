@@ -1,0 +1,3 @@
+
+add_subdirectory_ifdef(CONFIG_GTP_BUTTONS gtp_buttons)
+add_subdirectory_ifdef(CONFIG_GTP_DISPLAY gtp_display)

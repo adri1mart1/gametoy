@@ -1,0 +1,7 @@
+
+menu "Libraries"
+
+rsource "gtp_buttons/Kconfig"
+rsource "gtp_display/Kconfig"
+
+endmenu

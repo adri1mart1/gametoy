@@ -1,0 +1,3 @@
+&max7219_max7219_8x8 {
+    num-cascading = <4>;
+};

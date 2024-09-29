@@ -1,0 +1,16 @@
+
+config GTP_BUTTONS
+	bool "enable gtp buttons library"
+	default n
+	help
+	  enable gtp buttons library
+
+if GTP_BUTTONS
+
+module = GTPBUTTONS
+module-str = gtp_buttons
+source "subsys/logging/Kconfig.template.log_config"
+
+endif # GTP_BUTTONS
+
+

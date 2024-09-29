@@ -1,0 +1,16 @@
+
+config GTP_DISPLAY
+	bool "enable gtp display library"
+	default n
+	help
+	  enable gtp display library
+
+if GTP_DISPLAY
+
+module = GTPDISPLAY
+module-str = gtp_display
+source "subsys/logging/Kconfig.template.log_config"
+
+endif # GTP_DISPLAY
+
+
