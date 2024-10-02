@@ -2,6 +2,7 @@
 config GTP_BUTTONS
 	bool "enable gtp buttons library"
 	default n
+	select GPIO
 	help
 	  enable gtp buttons library
 
