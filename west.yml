@@ -20,5 +20,7 @@ manifest:
         name-allowlist:
           - segger
           - hal_nordic
+          - hal_st
+          - hal_stm32
           - cmsis
       west-commands: scripts/west-commands.yml
