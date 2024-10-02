@@ -1,0 +1,100 @@
+
+/ {
+	chosen {
+		zephyr,display = &max7219_8x32;
+	};
+
+	aliases {
+		buttonredpin = &red_button;
+		buttonredled = &red_led;
+		buttonwhitepin = &white_button;
+		buttonwhiteled = &white_led;
+		buttonbluepin = &blue_button;
+		buttonblueled = &blue_led;
+		buttonyellowpin = &yellow_button;
+		buttonyellowled = &yellow_led;
+		buttongreenpin = &green_button;
+		buttongreenled = &green_led;
+	};
+
+	buttons {
+		compatible = "gpio-keys";
+
+		red_button: red_button {
+			gpios = <&gpioc 7 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		};
+
+        white_button: white_button {
+			gpios = <&gpiob 6 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		};
+
+		blue_button: blue_button {
+			gpios = <&gpiob 4 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		};
+
+		yellow_button: yellow_button {
+			gpios = <&gpiod 2 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		};
+
+		green_button: green_button {
+			gpios = <&gpioa 15 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		};
+	};
+
+	leds {
+		red_led: red_led {
+			gpios = <&gpioc 6 GPIO_ACTIVE_HIGH>;
+		};
+
+		white_led: white_led {
+			gpios = <&gpiob 7 GPIO_ACTIVE_HIGH>;
+		};
+
+		blue_led: blue_led {
+			gpios = <&gpiob 5 GPIO_ACTIVE_HIGH>;
+		};
+
+		yellow_led: yellow_led {
+			gpios = <&gpiob 3 GPIO_ACTIVE_HIGH>;
+		};
+
+		green_led: green_led {
+			gpios = <&gpioa 14 GPIO_ACTIVE_HIGH>;
+		};
+	};
+};
+
+&gpiod {
+	status = "okay";
+};
+
+/*
+&timers1 {
+	status = "okay";
+    pwm1: pwm1 {
+        compatible = "st,stm32-pwm";
+        status = "okay";
+        #pwm-cells = < 0x3 >;
+        pinctrl-0 = <&tim1_ch1_pa8>;
+		pinctrl-names = "default";
+    };
+};*/
+
+&usart2 {
+    status = "disabled";
+};
+
+&spi1 {
+    pinctrl-0 = <&spi1_sck_pa5 &spi1_miso_pa6 &spi1_mosi_pa7 &spi1_nss_pa4>;
+    pinctrl-names = "default";
+    status = "okay";
+
+    max7219_8x32: max7219@0 {
+		compatible = "maxim,max7219";
+		reg = <0>;
+		spi-max-frequency = <1000000>;
+		num-cascading = <4>;
+		intensity = <1>;
+		scan-limit = <7>;
+	};
+};

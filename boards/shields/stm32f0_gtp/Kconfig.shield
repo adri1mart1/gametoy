@@ -1,0 +1,3 @@
+
+config SHIELD_STM32F0_GTP
+	def_bool $(shields_list_contains,stm32f0_gtp)
