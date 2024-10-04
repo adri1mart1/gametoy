@@ -1,0 +1,18 @@
+
+config GTP_REACTIVITY_GAME
+	bool "enable gtp reactivity game"
+	default n
+	select GTP_BUTTONS
+	select TEST_RANDOM_GENERATOR
+	help
+	  enable gtp reactivity game
+
+if GTP_REACTIVITY_GAME
+
+module = GTPREACTIVITYGAME
+module-str = gtp_reactivity_game
+source "subsys/logging/Kconfig.template.log_config"
+
+endif # GTP_REACTIVITY_GAME
+
+

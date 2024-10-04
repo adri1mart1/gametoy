@@ -1,7 +1,8 @@
 #ifndef GTP_BUTTONS_H__
 #define GTP_BUTTONS_H__
 
-#define MAX_DURATION_MS 65500
+#define MAX_DURATION_MS   65500
+#define NUMBER_OF_BUTTONS 5
 
 typedef enum {
 	GTP_BUTTON_NONE_COLOR = -1,
