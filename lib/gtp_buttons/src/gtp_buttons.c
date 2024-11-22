@@ -9,7 +9,7 @@ LOG_MODULE_REGISTER(gtp_buttons, CONFIG_GTPBUTTONS_LOG_LEVEL);
 static on_gtp_buttons_event_cb_t on_gtp_buttons_event_cb;
 
 #define ANTIBOUNCE_TIME   K_MSEC(10)
-#define STACK_SIZE        512
+#define STACK_SIZE        256
 #define PRIORITY          5
 #define NUMBER_OF_BUTTONS 5
 #define BLINKY_PERIOD_MS  50
@@ -159,6 +159,7 @@ static void generic_pin_triggered(const struct gpio_dt_spec *pin, const gtp_butt
 	const gtp_button_event_e evt =
 		gpio_pin_get_dt(pin) == 1 ? GTP_BUTTON_EVENT_PRESSED : GTP_BUTTON_EVENT_RELEASED;
 
+	LOG_INF("generic_pin_triggered");
 	if (on_gtp_buttons_event_cb != NULL) {
 		on_gtp_buttons_event_cb(color, evt);
 	}

@@ -15,6 +15,13 @@ typedef enum {
 } gtp_buttons_color_e;
 
 typedef enum {
+	GTP_BUTTON_NONE_ROLE = -1,
+	GTP_BUTTON_UP_ROLE = 3,       // yellow
+	GTP_BUTTON_DOWN_ROLE = 2,     // green
+	GTP_BUTTON_VALIDATE_ROLE = 4, // white
+} gtp_buttons_role_e;
+
+typedef enum {
 	GTP_BUTTON_EVENT_NONE = 0,
 	GTP_BUTTON_EVENT_PRESSED = 1,
 	GTP_BUTTON_EVENT_RELEASED = 2,

@@ -2,6 +2,8 @@
 config GTP_DISPLAY
 	bool "enable gtp display library"
 	default n
+	select DISPLAY
+	select EVENTS
 	help
 	  enable gtp display library
 

@@ -3,6 +3,7 @@ menu "Libraries"
 
 rsource "gtp_buttons/Kconfig"
 rsource "gtp_display/Kconfig"
+rsource "gtp_menu/Kconfig"
 rsource "gtp_reactivity_game/Kconfig"
 
 endmenu

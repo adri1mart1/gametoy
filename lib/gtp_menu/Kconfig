@@ -1,0 +1,16 @@
+
+config GTP_MENU
+	bool "enable gtp menu"
+	default n
+	help
+	  enable gtp menu library
+
+if GTP_MENU
+
+module = GTPMENU
+module-str = gtp_menu
+source "subsys/logging/Kconfig.template.log_config"
+
+endif # GTP_MENU
+
+
