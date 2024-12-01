@@ -1,0 +1,19 @@
+
+config GTP_GAME
+	bool "enable gtp game generic tools"
+	default n
+	select TEST_RANDOM_GENERATOR
+	select GTP_BUTTONS
+	select GTP_DISPLAY
+	help
+	  enable gtp game generic tools
+
+if GTP_GAME
+
+module = GTPGAME
+module-str = gtp_game
+source "subsys/logging/Kconfig.template.log_config"
+
+endif # GTP_GAME
+
+

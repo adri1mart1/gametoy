@@ -2,7 +2,7 @@
 #include <gtp_buttons.h>
 #include <gtp_display.h>
 #include <zephyr/kernel.h>
-#include <zephyr/random/random.h>
+#include <gtp_game.h>
 
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(gtp_reactivity_game, CONFIG_GTPREACTIVITYGAME_LOG_LEVEL);
@@ -12,74 +12,73 @@ LOG_MODULE_REGISTER(gtp_reactivity_game, CONFIG_GTPREACTIVITYGAME_LOG_LEVEL);
 K_SEM_DEFINE(reactivity_game_start, 0, 1);
 
 typedef struct {
-	int64_t start;
-	int64_t end;
+	uint32_t start;
+	uint32_t end;
 } round_timing_t;
 
-static int random_suite[NUMBER_OF_ROUND];
+static bool game_is_finished = false;
 static round_timing_t round_timings[NUMBER_OF_ROUND];
 static int round = 0;
+static uint8_t *random_suite_ptr = NULL;
+
 K_SEM_DEFINE(next_round_semaphore, 0, 1);
 
 static void on_gtp_buttons_event_cb(const gtp_buttons_color_e color, const gtp_button_event_e event)
 {
 	LOG_INF("on_gtp_buttons_event_cb");
-	if (color == random_suite[round] && event == GTP_BUTTON_EVENT_PRESSED) {
-		gtp_buttons_set_leds(&random_suite[round], 1, GTP_BUTTON_STATUS_OFF, 0, 0, 0);
-		round_timings[round].end = k_uptime_get();
+	if (color == random_suite_ptr[round] && event == GTP_BUTTON_EVENT_PRESSED) {
+		gtp_buttons_set_leds(&random_suite_ptr[round], 1, GTP_BUTTON_STATUS_OFF, 0, 0, 0);
+		round_timings[round].end = k_uptime_get_32();
 		k_sem_give(&next_round_semaphore);
 	}
 
 	// TODO add penalties
+
+	/* Small boolean hack to be locked on the last score display till as user press
+	 * a button */
+	if (game_is_finished) {
+		game_is_finished = false;
+	}
 }
 
 void gtp_reactivity_game_init()
 {
-	LOG_WRN("reactivity_game_start mutex lock init");
+	random_suite_ptr = gtp_game_get_random_suite_ptr();
 	k_sem_take(&reactivity_game_start, K_NO_WAIT);
 }
 
 void gtp_reactivity_game_start()
 {
-	LOG_WRN("reactivity_game_start mutex unlock start");
 	k_sem_give(&reactivity_game_start);
 }
 
-void gtp_reactivity_game_play()
+int gtp_reactivity_game_play()
 {
 	if (k_sem_take(&reactivity_game_start, K_NO_WAIT) != 0) {
-		return;
+		return 0;
 	}
 
-	gtp_display_clear();
+	LOG_WRN("gtp_reactivity_game_play");
+	gtp_game_countdown_to_play();
 
 	LOG_INF("GTP reactivity game started");
 
 	gtp_buttons_set_cb(on_gtp_buttons_event_cb);
 	memset(round_timings, 0, sizeof(round_timings));
-
-	// sys_rand_get is not a true random generator.
-	// Wait more or less time to vary the random numbers generated.
-	k_msleep(70);
-
-	sys_rand_get(random_suite, sizeof(random_suite));
-
-	for (int i = 0; i < NUMBER_OF_ROUND; ++i) {
-		random_suite[i] *= random_suite[i] < 0 ? -1 : 1;
-		random_suite[i] = random_suite[i] % NUMBER_OF_BUTTONS;
-	}
-
-	LOG_INF("random_suite: %d %d %d %d %d %d %d %d %d %d", random_suite[0], random_suite[1],
-		random_suite[2], random_suite[3], random_suite[4], random_suite[5], random_suite[6],
-		random_suite[7], random_suite[8], random_suite[9]);
-
+	gtp_game_init_random_button_suite();
+#if 0
+	LOG_INF("random_suite: %d %d %d %d %d %d %d %d %d %d", random_suite_ptr[0],
+		random_suite_ptr[1], random_suite_ptr[2], random_suite_ptr[3], random_suite_ptr[4],
+		random_suite_ptr[5], random_suite_ptr[6], random_suite_ptr[7], random_suite_ptr[8],
+		random_suite_ptr[9]);
+#endif
 	while (round < NUMBER_OF_ROUND) {
-		LOG_INF("round %d, color %d", round, random_suite[round]);
-		gtp_buttons_set_leds(&random_suite[round], 1, GTP_BUTTON_STATUS_ON, 0, 0, 0);
-		round_timings[round].start = k_uptime_get();
+		LOG_INF("round %d, color %d", round, random_suite_ptr[round]);
+		gtp_buttons_set_leds(&random_suite_ptr[round], 1, GTP_BUTTON_STATUS_ON, 0, 0, 0);
+		round_timings[round].start = k_uptime_get_32();
 		k_sem_take(&next_round_semaphore, K_FOREVER);
 
-		LOG_INF("round %d, time %lld", round,
+		LOG_INF("round %d, time %d", round,
 			round_timings[round].end - round_timings[round].start);
 		k_msleep(1000);
 
@@ -91,5 +90,13 @@ void gtp_reactivity_game_play()
 	for (int i = 0; i < NUMBER_OF_ROUND; ++i) {
 		total_time += round_timings[i].end - round_timings[i].start;
 	}
-	LOG_INF("Final score: %lld", total_time);
+	LOG_INF("final score: %lld", total_time);
+	gtp_game_display_score_int64_millisec(total_time);
+
+	game_is_finished = true;
+	while (game_is_finished) {
+		k_msleep(10);
+	}
+
+	return GAME_WELL_FINISHED;
 }

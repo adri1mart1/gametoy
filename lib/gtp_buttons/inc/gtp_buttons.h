@@ -4,6 +4,8 @@
 #define MAX_DURATION_MS   65500
 #define NUMBER_OF_BUTTONS 5
 
+#include <zephyr/types.h>
+
 typedef enum {
 	GTP_BUTTON_NONE_COLOR = -1,
 	GTP_BUTTON_RED_COLOR = 0,
@@ -36,8 +38,13 @@ typedef enum {
 
 int gtp_buttons_init();
 
-void gtp_buttons_set_leds(const int *colors, const int color_size, const gtp_button_status_e status,
-			  const int time_on_ms, const int time_off_ms, const int duration_ms);
+void gtp_buttons_set_all_leds_off();
+
+void gtp_buttons_set_led(const gtp_buttons_color_e color, const gtp_button_status_e status);
+
+void gtp_buttons_set_leds(const uint8_t *colors, const int color_size,
+			  const gtp_button_status_e status, const int time_on_ms,
+			  const int time_off_ms, const int duration_ms);
 
 typedef void (*on_gtp_buttons_event_cb_t)(const gtp_buttons_color_e color,
 					  const gtp_button_event_e event);

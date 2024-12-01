@@ -1,5 +1,7 @@
 
 add_subdirectory_ifdef(CONFIG_GTP_BUTTONS gtp_buttons)
 add_subdirectory_ifdef(CONFIG_GTP_DISPLAY gtp_display)
+add_subdirectory_ifdef(CONFIG_GTP_GAME gtp_game)
+add_subdirectory_ifdef(CONFIG_GTP_MEMORY_GAME gtp_memory_game)
 add_subdirectory_ifdef(CONFIG_GTP_MENU gtp_menu)
 add_subdirectory_ifdef(CONFIG_GTP_REACTIVITY_GAME gtp_reactivity_game)

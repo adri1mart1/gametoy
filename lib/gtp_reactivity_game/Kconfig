@@ -2,9 +2,9 @@
 config GTP_REACTIVITY_GAME
 	bool "enable gtp reactivity game"
 	default n
+	select GTP_GAME
 	select GTP_BUTTONS
 	select GTP_DISPLAY
-	select TEST_RANDOM_GENERATOR
 	help
 	  enable gtp reactivity game
 

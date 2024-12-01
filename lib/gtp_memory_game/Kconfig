@@ -1,0 +1,19 @@
+
+config GTP_MEMORY_GAME
+	bool "enable gtp memory game"
+	default n
+	select GTP_GAME
+	select GTP_BUTTONS
+	select GTP_DISPLAY
+	help
+	  enable gtp memory game
+
+if GTP_MEMORY_GAME
+
+module = GTPMEMORYGAME
+module-str = gtp_memory_game
+source "subsys/logging/Kconfig.template.log_config"
+
+endif # GTP_MEMORY_GAME
+
+

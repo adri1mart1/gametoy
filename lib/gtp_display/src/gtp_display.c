@@ -77,7 +77,7 @@ static int min_x_display_area = 0;
 static int max_x_display_area = DISPLAY_WIDTH - 1;
 static bool menu_mode = false;
 
-#define SENTENCE_SIZE 128
+#define SENTENCE_SIZE 64
 static char sentence[SENTENCE_SIZE] = {0};
 
 typedef struct {
@@ -189,6 +189,13 @@ const display_symbol_t symbols[] = {
 	{'x', {0x00, 0x09, 0x09, 0x06, 0x09, 0x09, 0x00, 0x00}, 4},
 	{'y', {0x00, 0x02, 0x02, 0x02, 0x05, 0x05, 0x00, 0x00}, 3},
 	{'z', {0x00, 0x07, 0x01, 0x02, 0x04, 0x07, 0x00, 0x00}, 4},
+
+	{255, {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, 0},
+	{255, {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, 0},
+	{255, {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, 0},
+	{255, {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, 0},
+
+	{'?', {0x02, 0x00, 0x02, 0x06, 0x08, 0x09, 0x06, 0x00}, 4},
 };
 
 const display_symbol_t *symbols_lookup_table[sizeof(symbols) / sizeof(symbols[0])] = {0};
@@ -452,7 +459,7 @@ static void gtp_display_entry_point(void *, void *, void *)
 		k_msleep(10);                                                                      \
 		uint32_t now_event = k_event_wait(&gtp_display_event, GTP_DISPLAY_ALL_EVENTS_MASK, \
 						  false, K_NO_WAIT);                               \
-		if (now_event != event) {                                                          \
+		if (now_event != 0 && now_event != event) {                                        \
 			break;                                                                     \
 		}                                                                                  \
 	}
@@ -482,6 +489,7 @@ static void gtp_display_entry_point(void *, void *, void *)
 			display_write(display_dev, 0, 0, &buf_desc, buf);
 
 			if (local_shift_needed) {
+				INTERRUPTIBLE_SLEEP(1000);
 				k_event_post(&gtp_display_event, GTP_DISPLAY_EVENT_SHIFT_TEXT);
 			}
 
@@ -524,12 +532,10 @@ static void gtp_display_entry_point(void *, void *, void *)
 
 			/* detect if end of shifting */
 			if (total_dot_led_length + global_offset <= local_max_x_display) {
-				LOG_INF("shift done !!");
 				INTERRUPTIBLE_SLEEP(3000);
 				k_event_clear(&gtp_display_event, GTP_DISPLAY_EVENT_SHIFT_TEXT);
 				k_event_post(&gtp_display_event, GTP_DISPLAY_EVENT_NEW_WORD);
 			}
-			// k_event_clear(&gtp_display_event, GTP_DISPLAY_EVENT_SHIFT_TEXT);
 
 		} else if (event & GTP_DISPLAY_EVENT_SWITCH_MENU_MODE_ON) {
 			LOG_INF("menu mode on");
@@ -546,125 +552,5 @@ static void gtp_display_entry_point(void *, void *, void *)
 		} else {
 			LOG_WRN("unknown event: %d", event);
 		}
-
-#if 0
-		k_event_wait(&event, K_FOREVER);
-
-		k_mutex_lock(&gtp_display_mutex, K_FOREVER);
-
-		LOG_INF("start waiting for any event");
-		k_condvar_wait(&gtp_display_condvar, &gtp_display_mutex, K_FOREVER);
-
-		LOG_INF("event to be checked");
-		// detect if there's a new or different sentence to display than the previous one
-		k_mutex_lock(&gtp_display_mutex, K_FOREVER);
-		if (strcmp(sentence, local_sentence) != 0) {
-			LOG_INF("new sentence to display: %s", sentence);
-			strncpy(local_sentence, sentence, sizeof(local_sentence) - 1);
-			RESET_VARIABLES();
-		}
-		local_menu_mode = menu_mode;
-
-		LOG_INF("releasing mutex");
-		k_mutex_unlock(&gtp_display_mutex);
-
-		LOG_INF("treat event");
-#endif
 	}
 }
-
-#if 0
-static void gtp_display_entry_point(void *, void *, void *)
-{
-	// init variables
-#define RESET_VARIABLES()                                                                          \
-	global_offset = 0;                                                                         \
-	total_dot_led_length = get_total_dot_led_length(local_sentence);                           \
-	idx = 0;
-
-	char local_sentence[SENTENCE_SIZE] = {0};
-	int global_offset = 0;
-	int total_dot_led_length = 0;
-	int idx = 0;
-	int max_x_display = DISPLAY_WIDTH;
-	bool local_menu_mode = false;
-
-	while (1) {
-
-		// detect if there's a new or different sentence to display than the previous one
-		k_mutex_lock(&gtp_display_mutex, K_FOREVER);
-		if (strcmp(sentence, local_sentence) != 0) {
-			LOG_INF("new sentence to display: %s", sentence);
-			strncpy(local_sentence, sentence, sizeof(local_sentence) - 1);
-			RESET_VARIABLES();
-		}
-		local_menu_mode = menu_mode;
-		k_mutex_unlock(&gtp_display_mutex);
-
-		// the available space to print a word depends on the menu mode
-		if (local_menu_mode == true) {
-			max_x_display = 24;
-		} else {
-			max_x_display = DISPLAY_WIDTH;
-		}
-
-		// display the sentence
-		memset(buf, 0, sizeof(buf));
-		idx = global_offset;
-
-		for (const char *c = local_sentence; *c != '\0'; ++c) {
-			if (*c < ASCII_OFFSET ||
-			    *c >= (ASCII_OFFSET + sizeof(symbols) / sizeof(symbols[0]))) {
-				LOG_WRN("Character '%c' not valid", *c);
-				continue;
-			}
-
-			const display_symbol_t *symbol = symbols_lookup_table[*c - ASCII_OFFSET];
-			if (symbol) {
-				gtp_display_add_letter(symbol->mask, &idx, max_x_display);
-				idx += symbol->width;
-				idx += 1; // space between symbol
-			} else {
-				LOG_ERR("Character not found in lookup table: %c", *c);
-			}
-		}
-
-		// add up and down arrows if in menu mode
-		if (local_menu_mode == true) {
-			int tmp_idx = 24;
-			gtp_display_add_letter(up_arrow_mask, &tmp_idx, DISPLAY_WIDTH);
-			tmp_idx = 24;
-			gtp_display_add_letter(down_arrow_mask, &tmp_idx, DISPLAY_WIDTH);
-		}
-
-		// display the sentence on the dot matrix
-		display_write(display_dev, 0, 0, &buf_desc, buf);
-
-		// detect the begining of the sentence to make a pause in the display
-		if (global_offset == 0) {
-			k_msleep(1000);
-		}
-
-		global_offset--;
-
-		// detect the end of the sentence to make a pause in the display
-		if (abs(global_offset) >= total_dot_led_length - max_x_display) {
-			k_msleep(1000);
-			RESET_VARIABLES();
-
-			// display blank screen for few ms to ease reading
-			memset(buf, 0, sizeof(buf));
-			if (local_menu_mode == true) {
-				int tmp_idx = 24;
-				gtp_display_add_letter(up_arrow_mask, &tmp_idx, DISPLAY_WIDTH);
-				tmp_idx = 24;
-				gtp_display_add_letter(down_arrow_mask, &tmp_idx, DISPLAY_WIDTH);
-			}
-			display_write(display_dev, 0, 0, &buf_desc, buf);
-			k_msleep(100);
-		}
-
-		k_msleep(100);
-	}
-}
-#endif

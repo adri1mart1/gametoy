@@ -16,7 +16,8 @@ static on_gtp_buttons_event_cb_t on_gtp_buttons_event_cb;
 
 /* Prototypes */
 static void blinky_entry_point(void *, void *, void *);
-static void generic_pin_triggered(const struct gpio_dt_spec *pin, const gtp_buttons_color_e color);
+static void generic_pin_triggered_work(const struct gpio_dt_spec *pin,
+				       const gtp_buttons_color_e color);
 static void reset_led_blink_state(const gtp_buttons_color_e color, const int led_new_value);
 
 /* Useful macros */
@@ -30,7 +31,7 @@ static void reset_led_blink_state(const gtp_buttons_color_e color, const int led
                                                                                                    \
 	static void antibounce_button_##color##_expired(struct k_work *)                           \
 	{                                                                                          \
-		generic_pin_triggered(&button_##color##_pin, GTP_BUTTON_##COLOR##_COLOR);          \
+		generic_pin_triggered_work(&button_##color##_pin, GTP_BUTTON_##COLOR##_COLOR);     \
 	}                                                                                          \
                                                                                                    \
 	static K_WORK_DELAYABLE_DEFINE(antibounce_button_##color##_work,                           \
@@ -99,6 +100,7 @@ typedef struct {
 	gtp_buttons_color_e color;
 } led_state_t;
 
+static const uint8_t all_leds[] = {0, 1, 2, 3, 4};
 static led_state_t led_state[NUMBER_OF_BUTTONS];
 
 BUILD_ASSERT(GTP_BUTTON_RED_COLOR < sizeof(led_state) / sizeof(led_state[0]));
@@ -114,7 +116,7 @@ static void evaluate_led_state(led_state_t *led_state)
 	}
 
 	// checking end blinking condition
-	if (led_state->remaining_duration_ms == 0) {
+	if (led_state->remaining_duration_ms <= 0) {
 		reset_led_blink_state(led_state->color, 0);
 
 	} else {
@@ -154,12 +156,12 @@ static void blinky_entry_point(void *, void *, void *)
 	}
 }
 
-static void generic_pin_triggered(const struct gpio_dt_spec *pin, const gtp_buttons_color_e color)
+static void generic_pin_triggered_work(const struct gpio_dt_spec *pin,
+				       const gtp_buttons_color_e color)
 {
 	const gtp_button_event_e evt =
 		gpio_pin_get_dt(pin) == 1 ? GTP_BUTTON_EVENT_PRESSED : GTP_BUTTON_EVENT_RELEASED;
 
-	LOG_INF("generic_pin_triggered");
 	if (on_gtp_buttons_event_cb != NULL) {
 		on_gtp_buttons_event_cb(color, evt);
 	}
@@ -226,8 +228,35 @@ static inline void configure_start_blink(const int idx, const int time_on_ms, co
 	led_state[idx].blink_mode_on = true;
 }
 
-void gtp_buttons_set_leds(const int *colors, const int color_size, const gtp_button_status_e status,
-			  const int time_on_ms, const int time_off_ms, const int duration_ms)
+void gtp_buttons_set_all_leds_off()
+{
+	gtp_buttons_set_leds(all_leds, sizeof(all_leds) / sizeof(all_leds[0]),
+			     GTP_BUTTON_STATUS_OFF, 0, 0, 0);
+}
+
+void gtp_buttons_set_led(const gtp_buttons_color_e color, const gtp_button_status_e status)
+{
+	if (status != GTP_BUTTON_STATUS_OFF && status != GTP_BUTTON_STATUS_ON) {
+		LOG_ERR("function incompatible with this status: %d", status);
+		return;
+	}
+
+	if (color == GTP_BUTTON_NONE_COLOR) {
+		return;
+	}
+
+	if (color == GTP_BUTTON_ALL_COLOR) {
+		gtp_buttons_set_leds(all_leds, sizeof(all_leds) / sizeof(all_leds[0]), status, 0, 0,
+				     0);
+		return;
+	}
+
+	gtp_buttons_set_leds((const uint8_t *)&color, 1, status, 0, 0, 0);
+}
+
+void gtp_buttons_set_leds(const uint8_t *colors, const int color_size,
+			  const gtp_button_status_e status, const int time_on_ms,
+			  const int time_off_ms, const int duration_ms)
 {
 	__ASSERT(colors != NULL, "invalid colors", NULL);
 	__ASSERT(color_size > 0, "invalid color size", NULL);

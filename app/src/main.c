@@ -1,10 +1,11 @@
-#include <zephyr/logging/log.h>
 #include <zephyr/kernel.h>
 #include <gtp_buttons.h>
 #include <gtp_menu.h>
 #include <gtp_display.h>
 #include <gtp_reactivity_game.h>
+#include <gtp_memory_game.h>
 
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app, CONFIG_APP_LOG_LEVEL);
 
 void on_gtp_buttons_event_cb(const gtp_buttons_color_e color, const gtp_button_event_e event)
@@ -24,7 +25,7 @@ void on_gtp_buttons_event_cb(const gtp_buttons_color_e color, const gtp_button_e
 			case GTP_BUTTON_VALIDATE_ROLE:
 				LOG_INF("Validate");
 				gtp_display_set_menu_mode(false);
-				gtp_reactivity_game_start();
+				gtp_memory_game_start();
 				break;
 			default:
 				break;
@@ -45,6 +46,7 @@ int main()
 	LOG_INF("starting game toy...");
 
 	gtp_reactivity_game_init();
+	gtp_memory_game_init();
 
 	gtp_menu_init();
 	gtp_menu_set_event_cb(on_gtp_menu_event_cb);
@@ -59,6 +61,17 @@ int main()
 
 	while (1) {
 		k_msleep(1000);
-		gtp_reactivity_game_play();
+
+		int ret = gtp_reactivity_game_play();
+		ret |= gtp_memory_game_play();
+
+		/* if we reach here, that mean the current game is done.
+		 * back to menu mode again. */
+
+		if (ret > 0) {
+			LOG_WRN("a game has been finished");
+			gtp_display_clear();
+			gtp_display_set_menu_mode(true);
+		}
 	}
 }
