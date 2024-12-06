@@ -46,6 +46,7 @@ int main()
 	LOG_INF("starting game toy...");
 
 	gtp_reactivity_game_init();
+	gtp_revert_reactivity_game_init();
 	gtp_memory_game_init();
 
 	gtp_menu_init();
@@ -63,6 +64,7 @@ int main()
 		k_msleep(1000);
 
 		int ret = gtp_reactivity_game_play();
+		ret |= gtp_revert_reactivity_game_play();
 		ret |= gtp_memory_game_play();
 
 		/* if we reach here, that mean the current game is done.
