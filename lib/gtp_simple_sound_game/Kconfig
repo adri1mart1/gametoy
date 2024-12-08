@@ -16,5 +16,3 @@ module-str = gtp_simple_sound_game
 source "subsys/logging/Kconfig.template.log_config"
 
 endif # GTP_SIMPLE_SOUND_GAME
-
-

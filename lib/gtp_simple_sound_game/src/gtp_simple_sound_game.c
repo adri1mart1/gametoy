@@ -28,6 +28,8 @@ static void on_gtp_buttons_event_cb(const gtp_buttons_color_e color, const gtp_b
 {
 	if (event == GTP_BUTTON_EVENT_PRESSED) {
 
+		gtp_buttons_set_led(color, GTP_BUTTON_STATUS_ON);
+
 		switch (color) {
 		case GTP_BUTTON_RED_COLOR:
 			pwm_set_dt(&pwm_led0, PWM_HZ(notes[0].frequency),
@@ -58,6 +60,7 @@ static void on_gtp_buttons_event_cb(const gtp_buttons_color_e color, const gtp_b
 			break;
 		}
 	} else if (event == GTP_BUTTON_EVENT_RELEASED) {
+		gtp_buttons_set_led(color, GTP_BUTTON_STATUS_OFF);
 		pwm_set_dt(&pwm_led0, PWM_HZ(1024u), 0);
 	}
 }
