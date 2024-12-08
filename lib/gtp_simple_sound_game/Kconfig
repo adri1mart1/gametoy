@@ -1,0 +1,20 @@
+
+config GTP_SIMPLE_SOUND_GAME
+	bool "enable gtp simple sound game"
+	default n
+	select GTP_GAME
+	select GTP_BUTTONS
+	select GTP_DISPLAY
+    select PWM
+	help
+	  enable gtp sound game
+
+if GTP_SIMPLE_SOUND_GAME
+
+module = GTPSIMPLESOUNDGAME
+module-str = gtp_simple_sound_game
+source "subsys/logging/Kconfig.template.log_config"
+
+endif # GTP_SIMPLE_SOUND_GAME
+
+

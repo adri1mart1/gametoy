@@ -17,6 +17,19 @@
 		buttongreenled = &green_led;
 	};
 
+	pwmleds: pwmleds {
+        compatible = "pwm-leds";
+        status = "okay";
+
+        green_pwm_led: green_pwm_led {
+            pwms = <&pwm 1 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+        };
+    };
+
+    aliases {
+        pwmled0 = &green_pwm_led;
+    };
+
 	buttons {
 		compatible = "gpio-keys";
 
@@ -68,17 +81,16 @@
 	status = "okay";
 };
 
-/*
 &timers1 {
-	status = "okay";
-    pwm1: pwm1 {
+    status = "okay";
+    pwm: pwm {
         compatible = "st,stm32-pwm";
         status = "okay";
         #pwm-cells = < 0x3 >;
         pinctrl-0 = <&tim1_ch1_pa8>;
-		pinctrl-names = "default";
+        pinctrl-names = "default";
     };
-};*/
+};
 
 &usart2 {
     status = "disabled";

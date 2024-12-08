@@ -4,6 +4,7 @@
 #include <gtp_display.h>
 #include <gtp_reactivity_game.h>
 #include <gtp_memory_game.h>
+#include <gtp_simple_sound_game.h>
 
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app, CONFIG_APP_LOG_LEVEL);
@@ -25,7 +26,7 @@ void on_gtp_buttons_event_cb(const gtp_buttons_color_e color, const gtp_button_e
 			case GTP_BUTTON_VALIDATE_ROLE:
 				LOG_INF("Validate");
 				gtp_display_set_menu_mode(false);
-				gtp_memory_game_start();
+				gtp_simple_sound_game_start();
 				break;
 			default:
 				break;
@@ -47,6 +48,7 @@ int main()
 
 	gtp_reactivity_game_init();
 	gtp_revert_reactivity_game_init();
+	gtp_simple_sound_game_init();
 	gtp_memory_game_init();
 
 	gtp_menu_init();
@@ -66,6 +68,7 @@ int main()
 		int ret = gtp_reactivity_game_play();
 		ret |= gtp_revert_reactivity_game_play();
 		ret |= gtp_memory_game_play();
+		ret |= gtp_simple_sound_game_play();
 
 		/* if we reach here, that mean the current game is done.
 		 * back to menu mode again. */
