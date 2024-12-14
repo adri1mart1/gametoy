@@ -470,7 +470,19 @@ static void gtp_display_entry_point(void *, void *, void *)
 					      false, K_FOREVER);
 		// LOG_DBG("event: %d", event);
 
-		if (event & GTP_DISPLAY_EVENT_NEW_WORD) {
+		if (event & GTP_DISPLAY_EVENT_SWITCH_MENU_MODE_ON) {
+			LOG_INF("menu mode on");
+			gtp_display_set_min_max_display_area(0, DISPLAY_WIDTH_MENU_ON);
+			k_event_post(&gtp_display_event, GTP_DISPLAY_EVENT_NEW_WORD);
+			k_event_clear(&gtp_display_event, GTP_DISPLAY_EVENT_SWITCH_MENU_MODE_ON);
+
+		} else if (event & GTP_DISPLAY_EVENT_SWITCH_MENU_MODE_OFF) {
+			LOG_INF("menu mode off");
+			gtp_display_set_min_max_display_area(0, DISPLAY_WIDTH);
+			k_event_post(&gtp_display_event, GTP_DISPLAY_EVENT_NEW_WORD);
+			k_event_clear(&gtp_display_event, GTP_DISPLAY_EVENT_SWITCH_MENU_MODE_OFF);
+
+		} else if (event & GTP_DISPLAY_EVENT_NEW_WORD) {
 			k_event_clear(&gtp_display_event, GTP_DISPLAY_EVENT_SHIFT_TEXT);
 			k_event_clear(&gtp_display_event, GTP_DISPLAY_EVENT_NEW_WORD);
 
@@ -536,18 +548,6 @@ static void gtp_display_entry_point(void *, void *, void *)
 				k_event_clear(&gtp_display_event, GTP_DISPLAY_EVENT_SHIFT_TEXT);
 				k_event_post(&gtp_display_event, GTP_DISPLAY_EVENT_NEW_WORD);
 			}
-
-		} else if (event & GTP_DISPLAY_EVENT_SWITCH_MENU_MODE_ON) {
-			LOG_INF("menu mode on");
-			gtp_display_set_min_max_display_area(0, DISPLAY_WIDTH_MENU_ON);
-			k_event_post(&gtp_display_event, GTP_DISPLAY_EVENT_NEW_WORD);
-			k_event_clear(&gtp_display_event, GTP_DISPLAY_EVENT_SWITCH_MENU_MODE_ON);
-
-		} else if (event & GTP_DISPLAY_EVENT_SWITCH_MENU_MODE_OFF) {
-			LOG_INF("menu mode off");
-			gtp_display_set_min_max_display_area(0, DISPLAY_WIDTH);
-			k_event_post(&gtp_display_event, GTP_DISPLAY_EVENT_NEW_WORD);
-			k_event_clear(&gtp_display_event, GTP_DISPLAY_EVENT_SWITCH_MENU_MODE_OFF);
 
 		} else {
 			LOG_WRN("unknown event: %d", event);

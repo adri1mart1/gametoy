@@ -19,6 +19,7 @@ static int move_idx = 0;
 static bool sequence_complete = false;
 static bool error_occured = false;
 static uint8_t *random_suite_ptr = NULL;
+static const char *menu_title = "memory game";
 
 static void on_gtp_buttons_event_cb(const gtp_buttons_color_e color, const gtp_button_event_e event)
 {
@@ -58,6 +59,11 @@ void gtp_memory_game_init()
 {
 	random_suite_ptr = gtp_game_get_random_suite_ptr();
 	k_sem_take(&memory_game_start, K_NO_WAIT);
+}
+
+const char *gtp_memory_game_get_menu_title()
+{
+	return menu_title;
 }
 
 void gtp_memory_game_start()

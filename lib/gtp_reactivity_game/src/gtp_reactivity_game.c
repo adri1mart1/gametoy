@@ -30,6 +30,9 @@ static bool game_is_finished = false;
 static round_timing_t round_timings[NUMBER_OF_ROUND];
 static int round = 0;
 static uint8_t *random_suite_ptr = NULL;
+static const char *reactivity_game_menu_title = "reactivity game";
+static const char *revert_reactivity_game_menu_title = "revert reactivity game";
+static const char *reactivity_phrase_game_menu_title = "reactivity phrase game";
 
 /* The order of the colors need to match with the button color enum ! */
 static const char *color_phrases[] = {"red", "blue", "green", "yellow", "white"};
@@ -78,6 +81,11 @@ void gtp_reactivity_game_init()
 {
 	random_suite_ptr = gtp_game_get_random_suite_ptr();
 	k_sem_take(&reactivity_game_start, K_NO_WAIT);
+}
+
+const char *gtp_reactivity_game_get_menu_title()
+{
+	return reactivity_game_menu_title;
 }
 
 void gtp_reactivity_game_start()
@@ -175,6 +183,11 @@ void gtp_revert_reactivity_game_init()
 	k_sem_take(&revert_reactivity_game_start, K_NO_WAIT);
 }
 
+const char *gtp_revert_reactivity_game_get_menu_title()
+{
+	return revert_reactivity_game_menu_title;
+}
+
 void gtp_revert_reactivity_game_start()
 {
 	k_sem_give(&revert_reactivity_game_start);
@@ -198,6 +211,11 @@ int gtp_revert_reactivity_game_play()
 void gtp_reactivity_phrase_game_init()
 {
 	k_sem_take(&reactivity_phrase_game_start, K_NO_WAIT);
+}
+
+const char *gtp_reactivity_phrase_game_get_menu_title()
+{
+	return reactivity_phrase_game_menu_title;
 }
 
 void gtp_reactivity_phrase_game_start()
