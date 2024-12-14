@@ -26,7 +26,7 @@ void on_gtp_buttons_event_cb(const gtp_buttons_color_e color, const gtp_button_e
 			case GTP_BUTTON_VALIDATE_ROLE:
 				LOG_INF("Validate");
 				gtp_display_set_menu_mode(false);
-				gtp_simple_sound_game_start();
+				gtp_reactivity_phrase_game_start();
 				break;
 			default:
 				break;
@@ -48,6 +48,7 @@ int main()
 
 	gtp_reactivity_game_init();
 	gtp_revert_reactivity_game_init();
+	gtp_reactivity_phrase_game_init();
 	gtp_simple_sound_game_init();
 	gtp_memory_game_init();
 
@@ -67,6 +68,7 @@ int main()
 
 		int ret = gtp_reactivity_game_play();
 		ret |= gtp_revert_reactivity_game_play();
+		ret |= gtp_reactivity_phrase_game_play();
 		ret |= gtp_memory_game_play();
 		ret |= gtp_simple_sound_game_play();
 

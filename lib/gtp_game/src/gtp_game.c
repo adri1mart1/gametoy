@@ -91,3 +91,11 @@ void gtp_game_sound_play_note(const int note, const int duration_ms)
 		k_work_reschedule(&play_note_work, K_MSEC(duration_ms));
 	}
 }
+
+void gtp_game_wait_for_any_input(bool *boolean)
+{
+	*boolean = true;
+	while (*boolean) {
+		k_msleep(10);
+	}
+}

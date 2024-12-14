@@ -12,6 +12,7 @@
 #define GTP_GAME_H__
 
 #include <zephyr/types.h>
+#include <stdbool.h>
 
 #define NOTE_B0  31
 #define NOTE_C1  33
@@ -117,6 +118,7 @@ void gtp_game_display_score_int64(const int64_t score);
 void gtp_game_display_score_int32(const int score);
 void gtp_game_display_score_int64_millisec(const int64_t score);
 void gtp_game_sound_play_note(const int note, const int duration_ms);
+void gtp_game_wait_for_any_input(bool *boolean);
 
 #define GAME_WELL_FINISHED 1
 
