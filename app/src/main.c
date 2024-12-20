@@ -5,6 +5,7 @@
 #include <gtp_reactivity_game.h>
 #include <gtp_memory_game.h>
 #include <gtp_simple_sound_game.h>
+#include <gtp_traffic_escape_game.h>
 
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app, CONFIG_APP_LOG_LEVEL);
@@ -51,14 +52,17 @@ int main()
 	gtp_reactivity_phrase_game_init();
 	gtp_simple_sound_game_init();
 	gtp_memory_game_init();
+	gtp_traffic_escape_game_init();
 
 	gtp_menu_init();
-	gtp_menu_set_title(gtp_memory_game_get_menu_title(), gtp_memory_game_start);
+	gtp_menu_set_title(gtp_traffic_escape_game_get_menu_title(), gtp_traffic_escape_game_start);
 	gtp_menu_set_title(gtp_reactivity_game_get_menu_title(), gtp_reactivity_game_start);
-	gtp_menu_set_title(gtp_revert_reactivity_game_get_menu_title(),
-			   gtp_revert_reactivity_game_start);
 	gtp_menu_set_title(gtp_reactivity_phrase_game_get_menu_title(),
 			   gtp_reactivity_phrase_game_start);
+	gtp_menu_set_title(gtp_revert_reactivity_game_get_menu_title(),
+			   gtp_revert_reactivity_game_start);
+	gtp_menu_set_title(gtp_simple_sound_game_get_menu_title(), gtp_simple_sound_game_start);
+	gtp_menu_set_title(gtp_memory_game_get_menu_title(), gtp_memory_game_start);
 	gtp_menu_set_event_cb(on_gtp_menu_event_cb);
 
 	gtp_display_init();
@@ -75,8 +79,9 @@ int main()
 		int ret = gtp_reactivity_game_play();
 		ret |= gtp_revert_reactivity_game_play();
 		ret |= gtp_reactivity_phrase_game_play();
-		ret |= gtp_memory_game_play();
 		ret |= gtp_simple_sound_game_play();
+		ret |= gtp_memory_game_play();
+		ret |= gtp_traffic_escape_game_play();
 
 		/* if we reach here, that mean the current game is done.
 		 * back to menu mode again. */

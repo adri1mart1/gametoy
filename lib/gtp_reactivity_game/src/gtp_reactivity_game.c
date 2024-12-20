@@ -155,14 +155,6 @@ static void compute_score()
 	gtp_game_display_score_int64_millisec(total_time);
 }
 
-static void wait_for_any_input()
-{
-	game_is_finished = true;
-	while (game_is_finished) {
-		k_msleep(10);
-	}
-}
-
 int gtp_reactivity_game_play()
 {
 	if (k_sem_take(&reactivity_game_start, K_NO_WAIT) != 0) {
@@ -173,7 +165,7 @@ int gtp_reactivity_game_play()
 	game_mode = REACTIVITY_GAME_NORMAL;
 	play_game();
 	compute_score();
-	wait_for_any_input();
+	gtp_game_wait_for_any_input(&game_is_finished);
 
 	return GAME_WELL_FINISHED;
 }
@@ -233,7 +225,7 @@ int gtp_reactivity_phrase_game_play()
 	game_mode = REACTIVITY_GAME_PHRASE;
 	play_game();
 	compute_score();
-	wait_for_any_input();
+	gtp_game_wait_for_any_input(&game_is_finished);
 
 	return GAME_WELL_FINISHED;
 }

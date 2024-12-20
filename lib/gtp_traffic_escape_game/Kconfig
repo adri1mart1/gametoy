@@ -1,0 +1,18 @@
+
+config GTP_TRAFFIC_ESCAPE_GAME
+	bool "enable gtp simple sound game"
+	default n
+	select GTP_GAME
+	select GTP_BUTTONS
+	select GTP_DISPLAY
+    select PWM
+	help
+	  enable gtp traffic escape game
+
+if GTP_TRAFFIC_ESCAPE_GAME
+
+module = GTPTRAFFICESCAPEGAME
+module-str = gtp_traffic_escape_game
+source "subsys/logging/Kconfig.template.log_config"
+
+endif # GTP_TRAFFIC_ESCAPE_GAME

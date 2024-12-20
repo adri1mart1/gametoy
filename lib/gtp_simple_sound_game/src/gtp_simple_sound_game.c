@@ -18,6 +18,8 @@ typedef struct {
 	int frequency;
 } note_t;
 
+static const char menu_title[] = "simple sound game";
+
 static const note_t notes[] = {
 	{.note = "DO", .frequency = 1046},  {.note = "RE", .frequency = 1175},
 	{.note = "MI", .frequency = 1318},  {.note = "FA", .frequency = 1397},
@@ -68,6 +70,11 @@ static void on_gtp_buttons_event_cb(const gtp_buttons_color_e color, const gtp_b
 void gtp_simple_sound_game_init()
 {
 	k_sem_take(&simple_sound_game_start, K_NO_WAIT);
+}
+
+const char *gtp_simple_sound_game_get_menu_title()
+{
+	return menu_title;
 }
 
 void gtp_simple_sound_game_start()

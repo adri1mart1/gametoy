@@ -316,6 +316,11 @@ void gtp_display_set_menu_mode(const bool on)
 	k_mutex_unlock(&gtp_display_mutex);
 }
 
+void gtp_display_print_buf(const char *buf)
+{
+	display_write(display_dev, 0, 0, &buf_desc, buf);
+}
+
 static void gtp_display_add_letter(const char mask[8], int *idx, const int max_idx)
 {
 	if (*idx >= max_idx) {

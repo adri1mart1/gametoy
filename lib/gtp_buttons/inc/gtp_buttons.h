@@ -36,6 +36,9 @@ typedef enum {
 	GTP_BUTTON_STATUS_BLINK = 2,
 } gtp_button_status_e;
 
+#define GTP_BUTTON_UP   GTP_BUTTON_YELLOW_COLOR
+#define GTP_BUTTON_DOWN GTP_BUTTON_GREEN_COLOR
+
 int gtp_buttons_init();
 
 void gtp_buttons_set_all_leds_off();
