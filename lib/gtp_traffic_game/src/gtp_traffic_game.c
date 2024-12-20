@@ -1,4 +1,4 @@
-#include <gtp_traffic_escape_game.h>
+#include <gtp_traffic_game.h>
 #include <gtp_display.h>
 #include <gtp_buttons.h>
 #include <gtp_game.h>
@@ -7,11 +7,13 @@
 #include <zephyr/random/random.h>
 
 #include <zephyr/logging/log.h>
-LOG_MODULE_REGISTER(gtp_traffic_escape_game, CONFIG_GTPTRAFFICESCAPEGAME_LOG_LEVEL);
+LOG_MODULE_REGISTER(gtp_traffic_game, CONFIG_GTPTRAFFICGAME_LOG_LEVEL);
 
 #define DISPLAY_WIDTH 32
 
-static const char menu_title[] = "traffic escape game";
+static const char menu_title_escape[] = "traffic escape game";
+static const char menu_title_catch[] = "traffic catch game";
+
 // the display buffer that holds data
 static uint8_t buf[DISPLAY_WIDTH];
 static uint8_t buf_obstacles[DISPLAY_WIDTH];
@@ -19,6 +21,14 @@ static bool game_is_finished = false;
 static uint8_t player_vertical_pos = 0;
 
 K_SEM_DEFINE(traffic_escape_game_start, 0, 1);
+K_SEM_DEFINE(traffic_catch_game_start, 0, 1);
+
+typedef enum {
+	TRAFFIC_GAME_ESCAPE = 0,
+	TRAFFIC_GAME_CATCH = 1
+} traffic_game_mode_t;
+
+static traffic_game_mode_t game_mode;
 
 static void on_gtp_buttons_event_cb(const gtp_buttons_color_e color, const gtp_button_event_e event)
 {
@@ -35,6 +45,12 @@ static void on_gtp_buttons_event_cb(const gtp_buttons_color_e color, const gtp_b
 		if (player_vertical_pos > 0) {
 			player_vertical_pos--;
 		}
+	}
+
+	/* Small boolean hack to be locked on the last score display till as user press
+	 * a button */
+	if (game_is_finished) {
+		game_is_finished = false;
 	}
 }
 
@@ -115,27 +131,8 @@ static uint8_t detect_intersec_and_clear()
 	return nb_hit;
 }
 
-void gtp_traffic_escape_game_init()
+static void play()
 {
-	k_sem_take(&traffic_escape_game_start, K_NO_WAIT);
-}
-
-const char *gtp_traffic_escape_game_get_menu_title()
-{
-	return menu_title;
-}
-
-void gtp_traffic_escape_game_start()
-{
-	k_sem_give(&traffic_escape_game_start);
-}
-
-int gtp_traffic_escape_game_play()
-{
-	if (k_sem_take(&traffic_escape_game_start, K_NO_WAIT) != 0) {
-		return 0;
-	}
-
 	gtp_buttons_set_cb(on_gtp_buttons_event_cb);
 
 	gtp_display_clear();
@@ -145,6 +142,7 @@ int gtp_traffic_escape_game_play()
 
 	static int i = 0;
 	int score = 0;
+	int total_hits = 0;
 
 	while (1) {
 
@@ -162,15 +160,18 @@ int gtp_traffic_escape_game_play()
 		gtp_display_print_buf(buf);
 
 		if (manage) {
-			const uint8_t nb_hit = detect_intersec_and_clear();
-			if (nb_hit > 0) {
-				score += nb_hit;
-			}
+			total_hits += detect_intersec_and_clear();
 		}
 
 		k_msleep(10);
 
-		if (i >= 1000) {
+		/* We stop catch game after a certain time ! */
+		if (game_mode == TRAFFIC_GAME_CATCH && i >= 1000) {
+			break;
+		}
+
+		/* We stop escape game after a certain amount of catch */
+		if (game_mode == TRAFFIC_GAME_ESCAPE && total_hits >= 5) {
 			break;
 		}
 	}
@@ -178,9 +179,65 @@ int gtp_traffic_escape_game_play()
 	gtp_display_clear();
 	k_msleep(1000);
 
+	if (game_mode == TRAFFIC_GAME_CATCH) {
+		score = total_hits;
+	} else if (game_mode == TRAFFIC_GAME_ESCAPE) {
+		score = i;
+	}
+
 	gtp_game_display_score_int32(score);
+}
 
+void gtp_traffic_escape_game_init()
+{
+	k_sem_take(&traffic_escape_game_start, K_NO_WAIT);
+}
+
+const char *gtp_traffic_escape_game_get_menu_title()
+{
+	return menu_title_escape;
+}
+
+void gtp_traffic_escape_game_start()
+{
+	k_sem_give(&traffic_escape_game_start);
+}
+
+int gtp_traffic_escape_game_play()
+{
+	if (k_sem_take(&traffic_escape_game_start, K_NO_WAIT) != 0) {
+		return 0;
+	}
+
+	game_mode = TRAFFIC_GAME_ESCAPE;
+	play();
 	gtp_game_wait_for_any_input(&game_is_finished);
+	return GAME_WELL_FINISHED;
+}
 
+void gtp_traffic_catch_game_init()
+{
+	k_sem_take(&traffic_catch_game_start, K_NO_WAIT);
+}
+
+const char *gtp_traffic_catch_game_get_menu_title()
+{
+	return menu_title_catch;
+}
+
+void gtp_traffic_catch_game_start()
+{
+	k_sem_give(&traffic_catch_game_start);
+}
+
+int gtp_traffic_catch_game_play()
+{
+	if (k_sem_take(&traffic_catch_game_start, K_NO_WAIT) != 0) {
+		return 0;
+	}
+
+	game_mode = TRAFFIC_GAME_CATCH;
+	play();
+	gtp_game_wait_for_any_input(&game_is_finished);
 	return GAME_WELL_FINISHED;
 }

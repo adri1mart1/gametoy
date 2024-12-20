@@ -1,0 +1,18 @@
+
+config GTP_TRAFFIC_GAME
+	bool "enable gtp traffic game"
+	default n
+	select GTP_GAME
+	select GTP_BUTTONS
+	select GTP_DISPLAY
+    select PWM
+	help
+	  enable gtp traffic game
+
+if GTP_TRAFFIC_GAME
+
+module = GTPTRAFFICGAME
+module-str = gtp_traffic_game
+source "subsys/logging/Kconfig.template.log_config"
+
+endif # GTP_TRAFFIC_GAME
