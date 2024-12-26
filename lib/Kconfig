@@ -8,6 +8,7 @@ rsource "gtp_memory_game/Kconfig"
 rsource "gtp_menu/Kconfig"
 rsource "gtp_reactivity_game/Kconfig"
 rsource "gtp_simple_sound_game/Kconfig"
+rsource "gtp_sound/Kconfig"
 rsource "gtp_traffic_game/Kconfig"
 
 endmenu

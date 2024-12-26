@@ -2,6 +2,7 @@
 #include <gtp_display.h>
 #include <gtp_buttons.h>
 #include <gtp_game.h>
+#include <gtp_sound.h>
 
 #include <zephyr/kernel.h>
 #include <zephyr/random/random.h>
@@ -160,7 +161,15 @@ static void play()
 		gtp_display_print_buf(buf);
 
 		if (manage) {
-			total_hits += detect_intersec_and_clear();
+			const uint8_t nb = detect_intersec_and_clear();
+			total_hits += nb;
+			if (nb > 0) {
+				if (game_mode == TRAFFIC_GAME_CATCH) {
+					gtp_sound_good_short_bip();
+				} else if (game_mode == TRAFFIC_GAME_ESCAPE) {
+					gtp_sound_error_long_bip();
+				}
+			}
 		}
 
 		k_msleep(10);

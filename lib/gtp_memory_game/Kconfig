@@ -5,6 +5,7 @@ config GTP_MEMORY_GAME
 	select GTP_GAME
 	select GTP_BUTTONS
 	select GTP_DISPLAY
+	select GTP_SOUND
 	help
 	  enable gtp memory game
 

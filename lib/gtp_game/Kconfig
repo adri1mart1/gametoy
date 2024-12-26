@@ -5,7 +5,6 @@ config GTP_GAME
 	select TEST_RANDOM_GENERATOR
 	select GTP_BUTTONS
 	select GTP_DISPLAY
-	select PWM
 	help
 	  enable gtp game generic tools
 

@@ -2,6 +2,7 @@
 #include <gtp_buttons.h>
 #include <gtp_display.h>
 #include <gtp_game.h>
+#include <gtp_sound.h>
 #include <zephyr/kernel.h>
 
 #include <zephyr/logging/log.h>
@@ -30,6 +31,7 @@ static void on_gtp_buttons_event_cb(const gtp_buttons_color_e color, const gtp_b
 			/* player pressed the correct button, going to next move ! */
 			++move_idx;
 			LOG_WRN("correct button %d, next move %d", color, move_idx);
+			gtp_sound_good_long_bip();
 
 			if (move_idx >= round_idx) {
 				LOG_WRN("seq complete");
@@ -40,13 +42,12 @@ static void on_gtp_buttons_event_cb(const gtp_buttons_color_e color, const gtp_b
 			LOG_WRN("wrong button %d expected [%d] -> ", color, move_idx,
 				random_suite_ptr[move_idx]);
 			error_occured = true;
+			gtp_sound_error_long_bip();
 		}
 
 	} else if (event == GTP_BUTTON_EVENT_RELEASED) {
 		gtp_buttons_set_led(color, GTP_BUTTON_STATUS_OFF);
 	}
-
-	// TODO add penalties
 
 	/* Small boolean hack to be locked on the last score display till as user press
 	 * a button */

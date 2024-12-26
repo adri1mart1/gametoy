@@ -2,6 +2,7 @@
 #include <gtp_buttons.h>
 #include <gtp_menu.h>
 #include <gtp_display.h>
+#include <gtp_sound.h>
 #include <gtp_reactivity_game.h>
 #include <gtp_memory_game.h>
 #include <gtp_simple_sound_game.h>
@@ -65,9 +66,14 @@ int main()
 	gtp_menu_set_title(gtp_memory_game_get_menu_title(), gtp_memory_game_start);
 	gtp_menu_set_title(gtp_traffic_escape_game_get_menu_title(), gtp_traffic_escape_game_start);
 	gtp_menu_set_title(gtp_traffic_catch_game_get_menu_title(), gtp_traffic_catch_game_start);
+	gtp_menu_set_title(gtp_sound_tell_it_on_the_mountain_get_menu_title(),
+			   gtp_sound_tell_it_on_the_mountain_start);
+	gtp_menu_set_title(gtp_sound_merry_christmas_get_menu_title(),
+			   gtp_sound_a_merry_christmas_start);
 	gtp_menu_set_event_cb(on_gtp_menu_event_cb);
 
 	gtp_display_init();
+	gtp_sound_init();
 
 	gtp_buttons_init();
 	gtp_buttons_set_cb(on_gtp_buttons_event_cb);
@@ -85,6 +91,10 @@ int main()
 		ret |= gtp_memory_game_play();
 		ret |= gtp_traffic_escape_game_play();
 		ret |= gtp_traffic_catch_game_play();
+
+		/* song part */
+		ret |= gtp_sound_play_tell_it_on_the_mountain();
+		ret |= gtp_sound_play_merry_christmas();
 
 		/* if we reach here, that mean the current game is done.
 		 * back to menu mode again. */

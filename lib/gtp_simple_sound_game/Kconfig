@@ -5,9 +5,9 @@ config GTP_SIMPLE_SOUND_GAME
 	select GTP_GAME
 	select GTP_BUTTONS
 	select GTP_DISPLAY
-    select PWM
+	select GTP_SOUND
 	help
-	  enable gtp sound game
+	  enable gtp simple sound game
 
 if GTP_SIMPLE_SOUND_GAME
 

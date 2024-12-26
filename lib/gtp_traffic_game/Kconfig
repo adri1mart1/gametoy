@@ -5,7 +5,7 @@ config GTP_TRAFFIC_GAME
 	select GTP_GAME
 	select GTP_BUTTONS
 	select GTP_DISPLAY
-    select PWM
+	select GTP_SOUND
 	help
 	  enable gtp traffic game
 

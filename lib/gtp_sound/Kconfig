@@ -1,0 +1,16 @@
+
+config GTP_SOUND
+	bool "enable gtp sound"
+	default n
+    select PWM
+	select GTP_GAME
+	help
+	  enable gtp sound library
+
+if GTP_SOUND
+
+module = GTPSOUND
+module-str = gtp_sound
+source "subsys/logging/Kconfig.template.log_config"
+
+endif # GTP_GTP_SOUND

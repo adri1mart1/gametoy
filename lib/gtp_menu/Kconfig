@@ -12,5 +12,3 @@ module-str = gtp_menu
 source "subsys/logging/Kconfig.template.log_config"
 
 endif # GTP_MENU
-
-
