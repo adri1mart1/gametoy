@@ -118,6 +118,21 @@ void gtp_game_sound_play_note(const uint16_t note, const int duration_ms)
 	k_mutex_unlock(&sound_mutex);
 }
 
+void gtp_game_sound_rest()
+{
+	const int ret = k_mutex_lock(&sound_mutex, DEFAULT_MUTEX_TIMEOUT);
+	if (ret != 0) {
+		LOG_ERR("mutex lock failed\n");
+		return;
+	}
+
+	sound_state.frequency = 0;
+	sound_state.remaining_duration_ms = 0;
+	sound_state.state = SOUND_TO_STOP;
+
+	k_mutex_unlock(&sound_mutex);
+}
+
 static void play_song(const uint16_t melody[], const int durations_ms[], const int len)
 {
 	for (uint8_t i = 0; i < len; ++i) {

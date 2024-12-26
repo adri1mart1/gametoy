@@ -58,5 +58,6 @@ int gtp_sound_play_merry_christmas();
 void gtp_sound_a_merry_christmas_start();
 
 void gtp_game_sound_play_note(const uint16_t note, const int duration_ms);
+void gtp_game_sound_rest();
 
 #endif /* GTP_SOUND_H__ */
