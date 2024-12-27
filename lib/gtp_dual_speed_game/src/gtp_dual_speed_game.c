@@ -124,8 +124,7 @@ int gtp_dual_speed_game_play()
 	now_row = 0;
 	gtp_display_clear();
 	gtp_buttons_set_cb(on_gtp_buttons_event_cb);
-	k_msleep(1000);
-	// gtp_game_countdown_to_play();
+	k_msleep(500);
 
 	prepare_initial_dots();
 	gtp_display_print_buf(buf);
