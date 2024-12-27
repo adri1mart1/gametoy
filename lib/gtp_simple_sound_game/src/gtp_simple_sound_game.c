@@ -15,6 +15,7 @@ static const struct pwm_dt_spec pwm_led0 = PWM_DT_SPEC_GET(DT_ALIAS(pwmled0));
 K_SEM_DEFINE(simple_sound_game_start, 0, 1);
 
 static const char menu_title[] = "simple sound game";
+static bool game_is_finished = false;
 
 static void on_gtp_buttons_event_cb(const gtp_buttons_color_e color, const gtp_button_event_e event)
 {
@@ -50,6 +51,11 @@ static void on_gtp_buttons_event_cb(const gtp_buttons_color_e color, const gtp_b
 		gtp_buttons_set_led(color, GTP_BUTTON_STATUS_OFF);
 		gtp_game_sound_rest();
 	}
+
+	if (gtp_buttons_is_all_pressed()) {
+		game_is_finished = true;
+		gtp_game_sound_rest();
+	}
 }
 
 void gtp_simple_sound_game_init()
@@ -83,8 +89,11 @@ int gtp_simple_sound_game_play()
 
 	gtp_buttons_set_cb(on_gtp_buttons_event_cb);
 
-	while (1) {
-		k_msleep(1000);
+	game_is_finished = false;
+
+	while (game_is_finished == false) {
+		k_msleep(100);
 	}
-	return 0;
+
+	return GAME_WELL_FINISHED;
 }
