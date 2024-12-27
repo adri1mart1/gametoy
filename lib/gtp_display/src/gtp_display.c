@@ -503,13 +503,13 @@ static void gtp_display_entry_point(void *, void *, void *)
 			display_write(display_dev, 0, 0, &buf_desc, buf);
 
 			if (local_shift_needed) {
-				INTERRUPTIBLE_SLEEP(1000);
+				INTERRUPTIBLE_SLEEP(500);
 				k_event_post(&gtp_display_event, GTP_DISPLAY_EVENT_SHIFT_TEXT);
 			}
 
 		} else if (event & GTP_DISPLAY_EVENT_SHIFT_TEXT) {
 			global_offset--;
-			INTERRUPTIBLE_SLEEP(100);
+			INTERRUPTIBLE_SLEEP(50);
 
 			memset(buf, 0, sizeof(buf));
 			idx = global_offset;
@@ -546,7 +546,7 @@ static void gtp_display_entry_point(void *, void *, void *)
 
 			/* detect if end of shifting */
 			if (total_dot_led_length + global_offset <= local_max_x_display) {
-				INTERRUPTIBLE_SLEEP(3000);
+				INTERRUPTIBLE_SLEEP(1000);
 				k_event_clear(&gtp_display_event, GTP_DISPLAY_EVENT_SHIFT_TEXT);
 				k_event_post(&gtp_display_event, GTP_DISPLAY_EVENT_NEW_WORD);
 			}
