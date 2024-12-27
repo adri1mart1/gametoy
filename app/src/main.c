@@ -8,6 +8,7 @@
 #include <gtp_simple_sound_game.h>
 #include <gtp_traffic_game.h>
 #include <gtp_dual_speed_game.h>
+#include <app_version.h>
 
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app, CONFIG_APP_LOG_LEVEL);
@@ -48,6 +49,7 @@ void on_gtp_menu_event_cb(const char *menu_to_display)
 int main()
 {
 	LOG_INF("starting game toy...");
+	LOG_WRN("Software version: %s", APP_VERSION_STRING);
 
 	gtp_reactivity_game_init();
 	gtp_revert_reactivity_game_init();
