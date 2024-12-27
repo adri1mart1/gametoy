@@ -103,6 +103,7 @@ int main()
 			LOG_WRN("a game has been finished");
 			gtp_buttons_set_cb(on_gtp_buttons_event_cb);
 			gtp_display_clear();
+			gtp_buttons_set_all_leds_off();
 			gtp_display_set_menu_mode(true);
 			gtp_menu_raise_cb();
 		}
