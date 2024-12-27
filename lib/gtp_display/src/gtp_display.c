@@ -455,9 +455,6 @@ static void gtp_display_entry_point(void *, void *, void *)
 	int local_max_x_display = max_x_display_area;
 	bool local_menu_mode = false;
 	bool local_shift_needed = false;
-	static uint32_t previous_event = 0;
-	int time_to_wait = 0;
-	int current_time_cnt = 0;
 
 #define INTERRUPTIBLE_SLEEP(max_ms)                                                                \
 	for (int i = 0; i < (max_ms / 10); ++i) {                                                  \

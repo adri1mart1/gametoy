@@ -1,6 +1,7 @@
 #include <gtp_game.h>
 #include <gtp_simple_sound_game.h>
 #include <gtp_buttons.h>
+#include <gtp_display.h>
 #include <gtp_sound.h>
 #include <string.h>
 #include <zephyr/kernel.h>

@@ -39,7 +39,7 @@ static void on_gtp_buttons_event_cb(const gtp_buttons_color_e color, const gtp_b
 			}
 		} else {
 			/* play pressed the wrong button */
-			LOG_WRN("wrong button %d expected [%d] -> ", color, move_idx,
+			LOG_WRN("wrong button %d expected [%d] -> %d", color, move_idx,
 				random_suite_ptr[move_idx]);
 			error_occured = true;
 			gtp_sound_error_long_bip();
