@@ -9,7 +9,7 @@ LOG_MODULE_REGISTER(gtp_dual_speed_game, CONFIG_GTPDUALSPEEDGAME_LOG_LEVEL);
 
 K_SEM_DEFINE(dual_speed_game_start, 0, 1);
 
-#define MAX_ROW 2
+#define MAX_ROW 8
 
 static const char *menu_title = "dual speed game";
 static uint8_t buf[DISPLAY_WIDTH];
