@@ -102,6 +102,7 @@ typedef struct {
 
 static const uint8_t all_leds[] = {0, 1, 2, 3, 4};
 static led_state_t led_state[NUMBER_OF_BUTTONS];
+static gtp_button_event_e button_state[NUMBER_OF_BUTTONS] = {GTP_BUTTON_EVENT_NONE};
 
 BUILD_ASSERT(GTP_BUTTON_RED_COLOR < sizeof(led_state) / sizeof(led_state[0]));
 BUILD_ASSERT(GTP_BUTTON_BLUE_COLOR < sizeof(led_state) / sizeof(led_state[0]));
@@ -161,6 +162,8 @@ static void generic_pin_triggered_work(const struct gpio_dt_spec *pin,
 {
 	const gtp_button_event_e evt =
 		gpio_pin_get_dt(pin) == 1 ? GTP_BUTTON_EVENT_PRESSED : GTP_BUTTON_EVENT_RELEASED;
+
+	button_state[color] = evt;
 
 	if (on_gtp_buttons_event_cb != NULL) {
 		on_gtp_buttons_event_cb(color, evt);
@@ -302,4 +305,13 @@ void gtp_buttons_set_leds(const uint8_t *colors, const int color_size,
 void gtp_buttons_set_cb(on_gtp_buttons_event_cb_t cb)
 {
 	on_gtp_buttons_event_cb = cb;
+}
+
+bool gtp_buttons_is_all_pressed()
+{
+	return button_state[GTP_BUTTON_RED_COLOR] == GTP_BUTTON_EVENT_PRESSED &&
+	       button_state[GTP_BUTTON_BLUE_COLOR] == GTP_BUTTON_EVENT_PRESSED &&
+	       button_state[GTP_BUTTON_GREEN_COLOR] == GTP_BUTTON_EVENT_PRESSED &&
+	       button_state[GTP_BUTTON_YELLOW_COLOR] == GTP_BUTTON_EVENT_PRESSED &&
+	       button_state[GTP_BUTTON_WHITE_COLOR] == GTP_BUTTON_EVENT_PRESSED;
 }

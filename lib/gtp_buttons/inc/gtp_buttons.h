@@ -5,6 +5,7 @@
 #define NUMBER_OF_BUTTONS 5
 
 #include <zephyr/types.h>
+#include <stdbool.h>
 
 typedef enum {
 	GTP_BUTTON_NONE_COLOR = -1,
@@ -53,5 +54,7 @@ typedef void (*on_gtp_buttons_event_cb_t)(const gtp_buttons_color_e color,
 					  const gtp_button_event_e event);
 
 void gtp_buttons_set_cb(on_gtp_buttons_event_cb_t cb);
+
+bool gtp_buttons_is_all_pressed();
 
 #endif // GTP_BUTTONS_H__
