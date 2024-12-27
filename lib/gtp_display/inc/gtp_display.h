@@ -4,6 +4,8 @@
 #include <zephyr/types.h>
 #include <stdbool.h>
 
+#define DISPLAY_WIDTH 32
+
 int gtp_display_init();
 void gtp_display_clear();
 void gtp_display_set_min_max_display_area(const int min, const int max);

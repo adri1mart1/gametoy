@@ -3,6 +3,7 @@ menu "Libraries"
 
 rsource "gtp_buttons/Kconfig"
 rsource "gtp_display/Kconfig"
+rsource "gtp_dual_speed_game/Kconfig"
 rsource "gtp_game/Kconfig"
 rsource "gtp_memory_game/Kconfig"
 rsource "gtp_menu/Kconfig"

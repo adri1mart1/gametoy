@@ -10,8 +10,6 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(gtp_traffic_game, CONFIG_GTPTRAFFICGAME_LOG_LEVEL);
 
-#define DISPLAY_WIDTH 32
-
 static const char menu_title_escape[] = "traffic escape game";
 static const char menu_title_catch[] = "traffic catch game";
 

@@ -7,6 +7,7 @@
 #include <gtp_memory_game.h>
 #include <gtp_simple_sound_game.h>
 #include <gtp_traffic_game.h>
+#include <gtp_dual_speed_game.h>
 
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app, CONFIG_APP_LOG_LEVEL);
@@ -55,6 +56,7 @@ int main()
 	gtp_memory_game_init();
 	gtp_traffic_escape_game_init();
 	gtp_traffic_catch_game_init();
+	gtp_dual_speed_game_init();
 
 	gtp_menu_init();
 	gtp_menu_set_title(gtp_reactivity_game_get_menu_title(), gtp_reactivity_game_start);
@@ -70,6 +72,7 @@ int main()
 			   gtp_sound_tell_it_on_the_mountain_start);
 	gtp_menu_set_title(gtp_sound_merry_christmas_get_menu_title(),
 			   gtp_sound_a_merry_christmas_start);
+	gtp_menu_set_title(gtp_dual_speed_game_get_menu_title(), gtp_dual_speed_game_start);
 	gtp_menu_set_event_cb(on_gtp_menu_event_cb);
 
 	gtp_display_init();
@@ -91,6 +94,7 @@ int main()
 		ret |= gtp_memory_game_play();
 		ret |= gtp_traffic_escape_game_play();
 		ret |= gtp_traffic_catch_game_play();
+		ret |= gtp_dual_speed_game_play();
 
 		/* song part */
 		ret |= gtp_sound_play_tell_it_on_the_mountain();
