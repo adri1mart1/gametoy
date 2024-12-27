@@ -147,7 +147,7 @@ static void play()
 
 	while (1) {
 
-		bool manage = i % 10 ? true : false;
+		bool manage = i % 5 == 0 ? true : false;
 
 		if (manage) {
 			add_random_obstacles();
