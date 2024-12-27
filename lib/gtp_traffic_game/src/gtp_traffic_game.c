@@ -141,7 +141,7 @@ static void play()
 
 	memset(buf_obstacles, 0, sizeof(buf_obstacles));
 
-	static int i = 0;
+	int i = 0;
 	int score = 0;
 	int total_hits = 0;
 
