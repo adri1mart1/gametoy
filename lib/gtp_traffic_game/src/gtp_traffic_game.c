@@ -175,7 +175,7 @@ static void play()
 		k_msleep(10);
 
 		/* We stop catch game after a certain time ! */
-		if (game_mode == TRAFFIC_GAME_CATCH && i >= 1000) {
+		if (game_mode == TRAFFIC_GAME_CATCH && i >= 3000) {
 			break;
 		}
 
