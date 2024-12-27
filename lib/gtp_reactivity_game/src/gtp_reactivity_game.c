@@ -28,6 +28,7 @@ typedef enum {
 static reactivity_game_mode_t game_mode = REACTIVITY_GAME_NORMAL;
 static bool game_is_finished = false;
 static round_timing_t round_timings[NUMBER_OF_ROUND];
+static uint32_t penalty_time_ms = 0;
 static int round = 0;
 static uint8_t *random_suite_ptr = NULL;
 static const char *reactivity_game_menu_title = "reactivity game";
@@ -50,8 +51,6 @@ static void on_gtp_buttons_event_cb(const gtp_buttons_color_e color, const gtp_b
 		return;
 	}
 
-	LOG_INF("on_gtp_buttons_event_cb");
-
 	if ((game_mode == REACTIVITY_GAME_NORMAL && color == random_suite_ptr[round]) ||
 	    (game_mode == REACTIVITY_GAME_INVERTED && color != random_suite_ptr[round]) ||
 	    (game_mode == REACTIVITY_GAME_PHRASE && color == random_suite_ptr[round])) {
@@ -67,7 +66,7 @@ static void on_gtp_buttons_event_cb(const gtp_buttons_color_e color, const gtp_b
 		k_sem_give(&next_round_semaphore);
 
 	} else {
-		round_timings[round].start -= PENALTY_TIME_MS;
+		penalty_time_ms += PENALTY_TIME_MS;
 	}
 
 	/* Small boolean hack to be locked on the last score display till as user press
@@ -99,6 +98,9 @@ static void prepare_game(const char *game_name)
 	gtp_game_countdown_to_play();
 	LOG_INF("starting");
 
+	game_is_finished = false;
+	round = 0;
+	penalty_time_ms = 0;
 	gtp_buttons_set_cb(on_gtp_buttons_event_cb);
 	memset(round_timings, 0, sizeof(round_timings));
 	gtp_game_init_random_button_suite();
@@ -147,11 +149,12 @@ static void play_game()
 
 static void compute_score()
 {
-	int64_t total_time = 0;
+	uint64_t total_time = 0;
 	for (int i = 0; i < NUMBER_OF_ROUND; ++i) {
 		total_time += round_timings[i].end - round_timings[i].start;
 	}
-	LOG_INF("final score: %lld", total_time);
+	total_time += penalty_time_ms;
+	LOG_INF("final score: %llu", total_time);
 	gtp_game_display_score_int64_millisec(total_time);
 }
 
