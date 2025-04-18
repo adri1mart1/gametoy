@@ -201,7 +201,6 @@ int gtp_sound_play_merry_christmas()
 	 */
 
 	static const uint16_t melody[] = {
-		// Start
 		NOTE_D6,                                        // Meas 01
 		NOTE_G6,  NOTE_G6, NOTE_A6,  NOTE_G6, NOTE_FS6, // Meas 02
 		NOTE_E6,  NOTE_E6, NOTE_E6,                     // Meas 03
@@ -213,10 +212,8 @@ int gtp_sound_play_merry_christmas()
 		NOTE_G6,                                        // Meas 09
 	};
 
-	// Durées des notes (en millisecondes, divisées par la longueur des notes)
-	// 4 = noire, 8 = croche, 2 = blanche
+	// Tone durations in ms
 	static const int noteDurations[] = {
-		// Start
 		500,                     // Meas 01
 		350, 250, 250, 250, 350, // Meas 02
 		350, 300, 350,           // Meas 03
