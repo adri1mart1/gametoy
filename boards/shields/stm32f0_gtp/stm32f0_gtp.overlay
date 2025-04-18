@@ -15,19 +15,16 @@
 		buttonyellowled = &yellow_led;
 		buttongreenpin = &green_button;
 		buttongreenled = &green_led;
+		pwmled0 = &music_pwm_led;
 	};
 
 	pwmleds: pwmleds {
         compatible = "pwm-leds";
         status = "okay";
 
-        green_pwm_led: green_pwm_led {
+        music_pwm_led: music_pwm_led {
             pwms = <&pwm 1 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
         };
-    };
-
-    aliases {
-        pwmled0 = &green_pwm_led;
     };
 
 	buttons {
