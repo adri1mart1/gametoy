@@ -1,0 +1,151 @@
+<section id="final-result">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h1 class="section-heading">Final result</h1>
+                <hr class="primary">
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Full video</h2>
+            </div>
+        </div>
+        <div class="row d-flex customchapter">
+            <div class="col-lg-12 col-md-12">
+This is a video of the final result. Refer to the following timecode if needed:
+<br/>
+<br/>
+00:10s - Setup
+<br/>
+00:35s - Gametoy menu
+<br/>
+00:48s - Reactivity game
+<br/>
+01:17s - Traffic catch game
+<br/>
+01:58s - Memory game
+<br/>
+02:41s - Dual speed game
+<br/>
+03:20s - Simple sound game
+<br/>
+03:44s - Merry Christmas song
+            </div>
+        </div>
+        <div class="row d-flex customchapter">
+            <div class="vimeo-facade" data-video-id="1076817375" data-hash="1fc1debf0e"
+                 style="position: relative; width: 100%; padding-bottom: 56.25%; cursor: pointer; background: #111; overflow: hidden;">
+                <img class="vimeo-facade-thumb"
+                     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.2s;"
+                     src="" alt="Video thumbnail" loading="lazy">
+                <button class="vimeo-facade-btn" aria-label="Play video"
+                        style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+                               background: rgba(23,35,34,0.75); border: none; border-radius: 50%; width: 72px; height: 72px;
+                               display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><polygon points="6,3 20,12 6,21"/></svg>
+                </button>
+            </div>
+        </div>
+        <script>
+        (function() {
+            var facade = document.currentScript.previousElementSibling.querySelector('.vimeo-facade');
+            var videoId = facade.dataset.videoId;
+            var hash = facade.dataset.hash;
+            var thumb = facade.querySelector('.vimeo-facade-thumb');
+            var btn = facade.querySelector('.vimeo-facade-btn');
+
+            // Fetch thumbnail from Vimeo oEmbed (CORS-enabled, no API key needed)
+            fetch('https://vimeo.com/api/oembed.json?url=https://vimeo.com/' + videoId)
+                .then(function(r) { return r.json(); })
+                .then(function(data) { thumb.src = data.thumbnail_url; })
+                .catch(function() { thumb.style.display = 'none'; });
+
+            // On click: replace facade with the real iframe
+            facade.addEventListener('click', function() {
+                var wrapper = document.createElement('div');
+                wrapper.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%';
+                var iframe = document.createElement('iframe');
+                iframe.src = 'https://player.vimeo.com/video/' + videoId + '?h=' + hash + '&autoplay=1';
+                iframe.frameBorder = '0';
+                iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+                iframe.allowFullscreen = true;
+                iframe.style.cssText = 'width:100%;height:100%;';
+                wrapper.appendChild(iframe);
+                facade.innerHTML = '';
+                facade.style.cursor = 'default';
+                facade.appendChild(wrapper);
+            });
+
+            btn.addEventListener('mouseenter', function() { btn.style.background = 'rgba(23,35,34,0.95)'; });
+            btn.addEventListener('mouseleave', function() { btn.style.background = 'rgba(23,35,34,0.75)'; });
+        })();
+        </script>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Reactivity game</h2>
+            </div>
+        </div>
+        <div class="row d-flex customchapter">
+            <div class="col-lg-12 col-md-12" style="align-self: center !important;">
+This game is called reactivity game. When the game starts, on of the button will light up. You have to press it as
+fast as you can. The game lasts for 10 rounds. Internally the game measure the reaction time between the lighting up
+of the button and the pressing of the button.
+<br/>
+<br/>
+Your final score is the addition of all the reaction times.
+<br/>
+<br/>
+Pressing a wrong button will add a penalty of 2s to the final score.
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Memory game</h2>
+            </div>
+        </div>
+        <div class="row d-flex customchapter">
+            <div class="col-lg-12 col-md-12" style="align-self: center !important;">
+This game is called memory game. It is very similar to the famous
+<a href="https://en.wikipedia.org/wiki/Simon_(game)" target="_blank">Simon game</a>.
+<br/>
+<br/>
+The game consists of five colored buttons, each producing a unique tone when pressed. The device generates a
+random sequence, starting with one color, and the player must repeat it correctly. With each successful round,
+the sequence grows longer, increasing the difficulty. If the player makes a mistake, the game ends, and they
+must start over. The goal is to achieve the highest possible sequence without errors.
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Traffic catch game</h2>
+            </div>
+        </div>
+        <div class="row d-flex customchapter">
+            <div class="col-lg-12 col-md-12" style="align-self: center !important;">
+This game is called traffic catch game. You play a car, represented with a 2x2 square on the left of the screen,
+objects are coming from the right, you need to catch as many objects as possible going up and down the road.
+<br/>
+<br/>
+The game ends after 30s. The score is the number of objects caught.
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Dual speed game</h2>
+            </div>
+        </div>
+        <div class="row d-flex customchapter">
+            <div class="col-lg-12 col-md-12" style="align-self: center !important;">
+This game is called dual speed game. You need two players, player on the left is using the blue button, player on
+the right is using the red button. The goal is to press a maximum of time your respective button. Each press will
+switch a pixel towards the center, till both sides are hit, then doing this on the upper row, and so on.
+<br/>
+<br/>
+The game ends when all pixels are hits. The score is the number of presses.
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,42 @@
+<section id="electronic">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h1 class="section-heading">Electronics</h1>
+                <hr class="primary">
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Schematic</h2>
+            </div>
+        </div>
+        <div class="row customchapter">
+            <div class="col-lg-12">
+The schematic is just below. The screen is powered via a +5v supply, using SPI communication (MOSI / MISO / CLK / CS).
+<br/>
+Each button has an integrated LED that can be powered by an IO as LED are not drawning that much current.
+<br/>
+Lastly, the piezo buzzer is driven via a PWM signal only.
+<br/>
+<br/>
+Prior to order all components, I had this kind of schematic in mind. You need to be very careful about the current
+consummed by each parts and if your USB supply is enough to power up everything. Of course USB standard can be powerful
+enough to power all these components but what matters is the USB chip use on this specific discovery board. I made
+all the calculation in advance so I knew it should not be a problem, even with the display with all its LEDs on.
+<br/>
+<br/>
+The only part I was blind is if LEDs inside the buttons will be visible enough to be powered directly by GPIO of the
+STM32 MCU. I was one of the first try when i received components. Plan be would have been to design a small dedicated
+circuit for that otherwise.
+            </div>
+        </div>
+        <div class="row customchapter">
+            <div class="col-lg-12">
+                <img src="img/schematic.png" class="img-responsive" alt="">
+            </div>
+        </div>
+    </div>
+</section>

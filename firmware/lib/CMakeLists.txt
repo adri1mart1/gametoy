@@ -1,0 +1,11 @@
+
+add_subdirectory_ifdef(CONFIG_GTP_BUTTONS gtp_buttons)
+add_subdirectory_ifdef(CONFIG_GTP_DISPLAY gtp_display)
+add_subdirectory_ifdef(CONFIG_GTP_DUAL_SPEED_GAME gtp_dual_speed_game)
+add_subdirectory_ifdef(CONFIG_GTP_GAME gtp_game)
+add_subdirectory_ifdef(CONFIG_GTP_MEMORY_GAME gtp_memory_game)
+add_subdirectory_ifdef(CONFIG_GTP_MENU gtp_menu)
+add_subdirectory_ifdef(CONFIG_GTP_REACTIVITY_GAME gtp_reactivity_game)
+add_subdirectory_ifdef(CONFIG_GTP_SIMPLE_SOUND_GAME gtp_simple_sound_game)
+add_subdirectory_ifdef(CONFIG_GTP_SOUND gtp_sound)
+add_subdirectory_ifdef(CONFIG_GTP_TRAFFIC_GAME gtp_traffic_game)

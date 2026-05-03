@@ -1,0 +1,19 @@
+
+config GTP_DUAL_SPEED_GAME
+	bool "enable gtp dual speed game"
+	default n
+	select TEST_RANDOM_GENERATOR
+	select GTP_BUTTONS
+	select GTP_DISPLAY
+	help
+	  enable gtp dual speed game
+
+if GTP_DUAL_SPEED_GAME
+
+module = GTPDUALSPEEDGAME
+module-str = gtp_dual_speed_game
+source "subsys/logging/Kconfig.template.log_config"
+
+endif # GTP_GAME
+
+

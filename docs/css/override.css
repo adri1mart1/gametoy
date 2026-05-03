@@ -1,0 +1,21 @@
+
+body {
+    font-size: 16px;
+    font-family: "Open Sans", "Helvetica Neue", Arial, sans-serif;
+}
+
+.customchapter {
+    display: flex !important;
+    background-color: rgba(246,232,217,.5);
+    padding: 15px;
+}
+
+
+h2.section-heading {
+    margin: 30px;
+}
+
+pre {
+    background: #282c34;
+    padding: 0px;
+}

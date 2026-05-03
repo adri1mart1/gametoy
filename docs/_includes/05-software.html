@@ -1,0 +1,368 @@
+<section id="software">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h1 class="section-heading">Software</h1>
+                <hr class="primary">
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Quick start of existing project</h2>
+            </div>
+        </div>
+        <div class="row customchapter">
+            <div class="col-lg-12">
+If you want to have a look at the code, try to compile it and play with it. The best way is simply to follow the
+README on the gametoy project page.
+<br/>
+I have been working on Windows, however, it's probably working on Linux or MacOS as well.
+<br/>
+<br/>
+If you have a different board than mine, you'll have to do some adjustments on the pinout to make it work (mostly
+in the dts file overlay), it should not be very complicated.
+<br/>
+<br/>
+If you found any issue, have any remarks, feel free to open an issue and / or create a pull request with interesting
+features to add.
+<br/>
+The rest of this chapter explain the philosophy, how I have worked so far to build this software. If you have a
+similar project using zephyr, I hope you can find inspiration to help you develop with this RTOS.
+<br/>
+<br/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Setting up the development environment</h2>
+            </div>
+        </div>
+        <div class="row customchapter">
+            <div class="col-lg-12">
+To start working with Zephyr RTOS, follow these steps:
+<ol>
+    <li>Create a working directory.</li>
+    <li>Install the Zephyr environment by following the
+        <a href="https://docs.zephyrproject.org/latest/develop/getting_started/index.html" target="_blank">Getting
+            Started Guide</a>.</li>
+    <li>Create a new project named <code>gametoy</code> and copy the <code>samples/basic/blinky</code> project into it.</li>
+</ol>
+This initial step ensures that we can compile and flash a board by making an LED blink.
+At this point, we can begin developing and validating each function of our game using a breadboard and Dupont wires,
+avoiding the need for soldering.
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Target configuration</h2>
+            </div>
+        </div>
+        <div class="row customchapter">
+            <div class="col-lg-12">
+When compiling, we use the keyword <code>stm32f051</code>, which refers to a specific target. A target may consist
+of multiple boards (a main board and a daughter board). Each target in Zephyr has a directory with a DTS file that
+defines its hardware.
+<br/>
+<br/>
+Since we are using a breadboard and adding new components (screen, buttons, LEDs, buzzer), we can create a new target
+or use an overlay file to extend the base DTS configuration. This is especially useful for development kits, as it
+allows us to add connections without modifying the hardware itself.
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Screen</h2>
+            </div>
+        </div>
+        <div class="row customchapter">
+            <div class="col-lg-12">
+The driver for the MAX7219 already exists in Zephyr. This chip controls an 8x8 dot matrix, and multiple units can be
+chained together. I used a pre-assembled screen with four MAX7219 chips connected via SPI:
+<br/>
+<br/>
+<pre class="bg-light p-3 border rounded">
+<code>
+&spi1 {
+    pinctrl-0 = <&spi1_sck_pa5 &spi1_miso_pa6 &spi1_mosi_pa7 &spi1_nss_pa4>;
+    pinctrl-names = "default";
+    status = "okay";
+
+    max7219_8x32: max7219@0 {
+        compatible = "maxim,max7219";
+        reg = <0>;
+        spi-max-frequency = <1000000>;
+        num-cascading = <4>;
+        intensity = <1>;
+        scan-limit = <7>;
+    };
+};
+</code>
+</pre>
+The screen is powered by 5V, which is conveniently provided by the development kit.
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Buttons</h2>
+            </div>
+        </div>
+        <div class="row customchapter">
+            <div class="col-lg-12">
+Each button has two pins: one connected to ground and the other to a GPIO pin. Pressing the button connects the
+signal to ground, a common mechanism for buttons. Here is the overlay configuration for five buttons:
+<br/>
+<br/>
+<pre class="bg-light p-3 border rounded">
+<code>
+buttons {
+    compatible = "gpio-keys";
+
+    red_button: red_button {
+        gpios = <&gpioc 7 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+    };
+
+    white_button: white_button {
+        gpios = <&gpiob 6 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+    };
+
+    blue_button: blue_button {
+        gpios = <&gpiob 4 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+    };
+
+    yellow_button: yellow_button {
+        gpios = <&gpiod 2 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+    };
+
+    green_button: green_button {
+        gpios = <&gpioa 15 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+    };
+};
+</code>
+</pre>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Button LEDs</h2>
+            </div>
+        </div>
+        <div class="row customchapter">
+            <div class="col-lg-12">
+Each LED has two pins: one connected to a GPIO signal and the other to ground. Setting the GPIO high turns the LED on.
+Here is the overlay configuration:
+<br/>
+<br/>
+<pre class="bg-light p-3 border rounded">
+<code>
+leds {
+    red_led: red_led {
+        gpios = <&gpioc 6 GPIO_ACTIVE_HIGH>;
+    };
+
+    white_led: white_led {
+        gpios = <&gpiob 7 GPIO_ACTIVE_HIGH>;
+    };
+
+    blue_led: blue_led {
+        gpios = <&gpiob 5 GPIO_ACTIVE_HIGH>;
+    };
+
+    yellow_led: yellow_led {
+        gpios = <&gpiob 3 GPIO_ACTIVE_HIGH>;
+    };
+
+    green_led: green_led {
+        gpios = <&gpioa 14 GPIO_ACTIVE_HIGH>;
+    };
+};
+</code>
+</pre>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Piezo buzzer</h2>
+            </div>
+        </div>
+        <div class="row customchapter">
+            <div class="col-lg-12">
+The piezo buzzer is controlled using PWM (Pulse Width Modulation). A square wave signal at a specific frequency
+determines the note played, while the duty cycle controls volume.
+<br/>
+<br/>
+<pre class="bg-light p-3 border rounded">
+<code>
+pwmleds: pwmleds {
+    compatible = "pwm-leds";
+    status = "okay";
+
+    music_pwm_led: music_pwm_led {
+        pwms = <&pwm 1 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+    };
+};
+
+&timers1 {
+    status = "okay";
+    pwm: pwm {
+        compatible = "st,stm32-pwm";
+        status = "okay";
+        #pwm-cells = < 0x3 >;
+        pinctrl-0 = <&tim1_ch1_pa8>;
+        pinctrl-names = "default";
+    };
+};
+</code>
+</pre>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Software Architecture</h2>
+            </div>
+        </div>
+        <div class="row customchapter">
+            <div class="col-lg-6 col-md-6">
+To organize my source code, I created a <code>lib</code> folder where I store reusable macro software components.
+For example, I developed a component called <code>gtp_sound</code> that allows me to generate sounds, beeps, and
+full melodies. This component can be used by any other module or game to add sound effects.
+<br/>
+<br/>
+An additional advantage of this structure is the ability to create a dedicated test program to refine and validate
+this software module.
+<br/>
+<br/>
+On the right, you can find a small diagram of all software components. Starting from bottom to top, the blue ones
+are already developed on Zephyr RTOS.
+<br/>
+<br/>
+Then, you have three components to deal with buttons, display and sounds. The gametoy project is really only dealing
+with these 3 main features.
+<br/>
+<br/>
+On top of that, I have design two module, menu and game because all games have things in common (useful functions,
+how to quit a game, how to display points, etc...). All games must appear on the menu when the product starts.
+            </div>
+            <div class="col-lg-6 col-md-6" style="align-self: center !important;">
+                <img src="img/sw_arch_diagram.drawio.png" class="img-responsive" alt="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">How to make music with a piezo buzzer ?</h2>
+            </div>
+        </div>
+        <div class="row customchapter">
+            <div class="col-lg-12">
+To create music, sounds, I have integrated a
+<a href="https://www.az-delivery.de/fr/products/buzzer-modul-passiv" target="_blank">piezo buzzer</a>. You need to
+feed this component with a PWM (pulse width modulation) signal.
+<br/>
+Each tone is a different frequency, if you play the exact frequency for the expected amount of time, you can reproduce
+a lot of different sounds.
+<br/>
+<br/>
+First, i tried some arduino code I found on
+<a href="https://github.com/robsoncouto/arduino-songs/blob/master/gameofthrones/gameofthrones.ino" target="_blank">github</a>,
+This was not fully working as my hardware is not able to play pwm at a lower frequency than 740Hz.
+<br/>
+<br/>
+I kept the header with all predefined tones and asked chatgpt to generate me some basic melody such as merry christmas.
+I did not use the audio result because you could barely guess it was merry christmas. Some notes were completely wrong.
+LLM are quite good sometimes but in autumn 2024, they were not really good to generate a music in your code.
+            </div>
+        </div>
+        <br/>
+        <div class="row customchapter">
+            <div class="col-lg-6 col-md-6" style="align-self: center !important;">
+Lastly, I simply find the music partition online and manually code the notes and duration I heard. I ended up with
+a code similar to that.
+<br/>
+<br/>
+For the resulting audio, please have a look at the video at the bottom of this page.
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <img src="img/we-wish-you-a-merry-xmas.png" class="img-responsive" alt="">
+            </div>
+        </div>
+        <br/>
+<pre class="bg-light p-3 border rounded">
+<code>
+int gtp_sound_play_merry_christmas()
+{
+	if (k_sem_take(&merry_christmas_start, K_NO_WAIT) != 0) {
+		return 0;
+	}
+
+	/* source: https://gmajormusictheory.org/Freebies/Sing/WeWishYouAMerry/WeWishYouAMerry.pdf */
+
+	static const uint16_t melody[] = {
+		NOTE_D6,                                        // Meas 01
+		NOTE_G6,  NOTE_G6, NOTE_A6,  NOTE_G6, NOTE_FS6, // Meas 02
+		NOTE_E6,  NOTE_E6, NOTE_E6,                     // Meas 03
+		NOTE_A6,  NOTE_A6, NOTE_B6,  NOTE_A6, NOTE_G6,  // Meas 04
+		NOTE_FS6, NOTE_D6, NOTE_D6,                     // Meas 05
+		NOTE_B6,  NOTE_B6, NOTE_C6,  NOTE_B6, NOTE_A6,  // Meas 06
+		NOTE_G6,  NOTE_E6, NOTE_D6,  NOTE_D6,           // Meas 07
+		NOTE_E6,  NOTE_A6, NOTE_FS6,                    // Meas 08
+		NOTE_G6,                                        // Meas 09
+	};
+
+	// Tone durations in ms
+	static const int noteDurations[] = {
+		500,                     // Meas 01
+		350, 250, 250, 250, 350, // Meas 02
+		350, 300, 350,           // Meas 03
+		350, 250, 250, 250, 250, // Meas 04
+		350, 350, 300,           // Meas 05
+		350, 250, 250, 250, 350, // Meas 06
+		350, 350, 400, 400,      // Meas 07
+		400, 450, 450,           // Meas 08
+		900,                     // Meas 09
+	};
+
+	play_song(melody, noteDurations, sizeof(melody) / sizeof(melody[0]));
+
+	return SONG_WELL_FINISHED;
+}
+</code>
+</pre>
+<br/>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Software Design Constraints</h2>
+            </div>
+        </div>
+        <div class="row customchapter">
+            <div class="col-lg-12">
+The biggest constraint is RAM usage. The STM32F0 has only 8KB of RAM, so careful software design is needed to avoid
+running out of memory.
+<br/>
+<br/>
+The following optimization strategies were used:
+<ul>
+    <li>Minimizing the number of threads. Currently, there are only four:</li>
+    <ul>
+        <li>One thread for LED management (especially blinking).</li>
+        <li>One thread for handling the display.</li>
+        <li>One thread for Zephyr work (used for button press callbacks).</li>
+        <li>The main thread handles everything else, including games and music.</li>
+    </ul>
+    <li>Since all games run in the main thread, mutex-based mechanisms ensure proper execution control.</li>
+</ul>
+While this design is efficient, it results in a less elegant <code>main.c</code>, which some purists might critique.
+<br/>
+<br/>
+New games can be created easily using the same principles, allowing creativity in game design.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

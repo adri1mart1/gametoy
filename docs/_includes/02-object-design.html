@@ -1,0 +1,136 @@
+<section id="object-design">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h1 class="section-heading">Object design</h1>
+                <hr class="primary">
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Initial Planning - From Idea to Prototype</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="customchapter">
+                <div class="col-lg-12">
+The project brainstorming began in September 2024, with the goal of having a finished product ready for Christmas
+2024. I quickly settled on the idea of a fun box with illuminated buttons, a display screen, and simple games.
+<br/>
+<br/>
+Key constraints shaped the design:
+<ul>
+    <li>No built-in battery (very personal choice)</li>
+    <li>A finish product for an attractive look</li>
+    <li>Component compatibility with available tools</li>
+    <li>Use wood if possible (I love to build things with wood)</li>
+    <li>Easy to do</li>
+</ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Component Sourcing</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="customchapter">
+                <div class="col-lg-12">
+Selecting components was a critical step to save time and money.
+<br/>
+<br/>
+My criteria included:
+<ul>
+    <li>Reasonable price</li>
+    <li>Stock availability</li>
+    <li>Quality and technical compatibility</li>
+    <li>Delivery timelines</li>
+</ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Key Components Chosen</h2>
+            </div>
+        </div>
+        <div class="row d-flex customchapter">
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <img src="img/dot_matrix_removebg.png" class="img-responsive" alt="">
+            </div>
+            <div class="col-lg-10 col-md-9 col-sm-8" style="align-self: center !important;">
+Dot matrix screen: <a href="https://www.ebay.fr/itm/163699667529" target="_blank">Ebay link</a>.
+Large enough to display text, and compatible with Zephyr RTOS.
+Here is a great article explaining dot matrix details
+<a href="https://wayoda.github.io/LedControl/pages/hardware.html" target="_blank">Link</a>.
+            </div>
+        </div>
+        <br/>
+        <div class="row d-flex customchapter">
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <img src="img/illuminated_buttons_removebg.png" class="img-responsive" alt="">
+            </div>
+            <div class="col-lg-10 col-md-9 col-sm-8" style="align-self: center !important;">
+Illuminated buttons: <a href="https://www.amazon.fr/EG-Illuminated-Buttons-Machine-Raspberry/dp/B01N11BDX9" target="_blank">Amazon link</a>.
+Five colors with bright lighting, even at 5V.
+            </div>
+        </div>
+        <br/>
+        <div class="row d-flex customchapter">
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <img src="img/piezo_buzzer_removebg.png" class="img-responsive" alt="">
+            </div>
+            <div class="col-lg-10 col-md-9 col-sm-8" style="align-self: center !important;">
+Piezo buffer: <a href="https://www.amazon.fr/AZDelivery-⭐⭐⭐⭐⭐-Carte-pour-Arduino/dp/B07ZTR24HX" target="_blank">Amazon link</a>.
+Very classic and basic buzzer driven via a pwm.
+            </div>
+        </div>
+        <br/>
+        <div class="row d-flex customchapter">
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <img src="img/stm32f0diso_removebg.png" class="img-responsive" alt="">
+            </div>
+            <div class="col-lg-10 col-md-9 col-sm-8" style="align-self: center !important;">
+STM32 development kit: <a href="https://www.st.com/en/evaluation-tools/stm32f0discovery.html" target="_blank">ST link</a>.
+<br/>
+<br/>
+As I wanted to develop with <a href="https://docs.zephyrproject.org/latest/" target="_blank">Zephyr RTOS</a>, I
+choose a board compatible with it, see
+<a href="https://docs.zephyrproject.org/latest/boards/st/stm32f0_disco/doc/index.html" target="_blank">zephyr link</a>.
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Very first prototype</h2>
+            </div>
+        </div>
+        <div class="row d-flex customchapter">
+            <div class="col-lg-6 col-md-6" style="align-self: center !important;">
+Once components were received, it was time to first setup the project. At that time, I was not sure about the physical
+position of buttons, screens. I was not sure about what kind of games would be suitable.
+<br/>
+<br/>
+Most of the time when you design a new product, you make a POC (proof of concept). For that I use a piece of cardboard,
+a breadboard to start wiring the components.
+<br/>
+<br/>
+I put only the buttons and the screen visible from the front side, like the final product would be.
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <img src="img/proto-start.jpg" class="img-responsive" alt="">
+            </div>
+        </div>
+        <div class="row customchapter">
+            <div class="col-lg-6 col-md-6">
+                <img src="img/proto-back.jpg" class="img-responsive" alt="">
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <img src="img/proto-front.jpg" class="img-responsive" alt="">
+            </div>
+        </div>
+    </div>
+</section>
