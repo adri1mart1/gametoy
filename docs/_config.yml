@@ -4,7 +4,7 @@ title: Gametoy project
 email: adrienmar@kickmaker.net
 description: Gametoy project is a very basic woodbox with LEDs, button, buzzer and display to play games
 
-baseurl: /gametoy-page
+baseurl: /gametoy
 url: https://adri1mart1.github.io/
 
 github_username: adri1mart1
